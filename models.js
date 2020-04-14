@@ -1,5 +1,10 @@
 const { Sequelize, Model, DataTypes } = require('sequelize');
-const sequelize = new Sequelize('postgres://localhost:5432/covid-stats');
+
+const PG_PORT = process.env.PG_PORT || '5432'
+const PG_ADDRESS = process.env.PG_ADDRESS || 'localhost'
+const PG_DB_NAME = process.env.PG_DB_NAME || 'covid-stats'
+
+const sequelize = new Sequelize(`postgres://${PG_ADDRESS}:${PG_PORT}/${PG_DB_NAME}`);
 
 class Statistics extends Model {}
 Statistics.init({
@@ -35,6 +40,6 @@ Statistics.init({
 // sequelize.sync()
 
 module.exports = {
-  // Country: Country,
+  sequelize: sequelize,
   Statistics: Statistics
 }
