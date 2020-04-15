@@ -7,8 +7,9 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "jest --watchAll",
     "sync": "node sync",
+    "pretest": "NODE_ENV=test yarn sync",
+    "test": "jest --watchAll",
     "start": "node index"
   },
   "keywords": [],

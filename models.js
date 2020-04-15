@@ -1,11 +1,13 @@
 const { Sequelize, Model, DataTypes } = require("sequelize");
 
+const PG_USER = process.env.PG_USER || "covidstats";
+const PG_PASSWORD = process.env.PG_PASSWORD || "covidstats";
+const PG_DB_NAME = process.env.PG_DB_NAME || "covidstats";
 const PG_PORT = process.env.PG_PORT || "5432";
 const PG_ADDRESS = process.env.PG_ADDRESS || "localhost";
-const PG_DB_NAME = process.env.PG_DB_NAME || "covid-stats";
 
 const sequelize = new Sequelize(
-  `postgres://${PG_ADDRESS}:${PG_PORT}/${PG_DB_NAME}`
+  `postgres://${PG_USER}:${PG_PASSWORD}@${PG_ADDRESS}:${PG_PORT}/${PG_DB_NAME}`
 );
 
 class Statistics extends Model {}
