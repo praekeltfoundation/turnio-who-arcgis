@@ -1,35 +1,36 @@
 const axios = require("axios").default;
 // const iso3166 = require('phone').iso3166_data
 
-const { Statistics } = require('./models')
+const { Statistics } = require("./models");
 
-function shouldNotHaveToUpdate (dataObj) {
-  const eightHrsInMs = (8 * 60 * 60 * 1000)
-  return (Date.now() - new Date(dataObj.updated)) < eightHrsInMs
+function shouldNotHaveToUpdate(dataObj) {
+  const eightHrsInMs = 8 * 60 * 60 * 1000;
+  return Date.now() - new Date(dataObj.updated) < eightHrsInMs;
 }
 
 function retrieveData(countryCode) {
   return Statistics.findOne({
     where: {
-      country_code: countryCode
-    }
-  }).then(obj => {
+      country_code: countryCode,
+    },
+  }).then((obj) => {
     if (obj && shouldNotHaveToUpdate(obj)) {
       return obj;
     }
 
-    return retrieveFromArcGis(countryCode)
-      .then(data => {
-        const features = data.features.sort((a, b) => a.attributes.date_epicrv - b.attributes.date_epicrv)
-        const latest = features.pop().attributes
-        return Statistics.create({
-          country_code: countryCode,
-          updated: latest.date_epicrv,
-          new_cases: latest.NewCase,
-          cum_cases: latest.CumCase,
-          new_deaths: latest.NewDeath,
-          cum_deaths: latest.CumDeath,
-        });
+    return retrieveFromArcGis(countryCode).then((data) => {
+      const features = data.features.sort(
+        (a, b) => a.attributes.date_epicrv - b.attributes.date_epicrv
+      );
+      const latest = features.pop().attributes;
+      return Statistics.create({
+        country_code: countryCode,
+        updated: latest.date_epicrv,
+        new_cases: latest.NewCase,
+        cum_cases: latest.CumCase,
+        new_deaths: latest.NewDeath,
+        cum_deaths: latest.CumDeath,
+      });
     });
   });
 }
@@ -45,10 +46,10 @@ function retrieveFromArcGis(countryCode) {
     method: "get",
     url: `${featureServerUrl}/${query(countryCode)}`,
   }).then((res) => res.data);
-};
+}
 
 module.exports = {
   retrieveData: retrieveData,
   retrieveFromArcGis: retrieveFromArcGis,
-  shouldNotHaveToUpdate: shouldNotHaveToUpdate
+  shouldNotHaveToUpdate: shouldNotHaveToUpdate,
 };
