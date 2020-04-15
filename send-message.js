@@ -1,16 +1,17 @@
 const axios = require("axios").default;
+const debug = require("debug")("turn");
 
-const ENVIRONMENT = process.env.ENVIRONMENT || "dev";
-const conf = require(`./conf.${ENVIRONMENT}.json`);
+const TOKEN = process.env.TOKEN;
 
 const turnMsg = `https://whatsapp.turn.io/v1/messages`;
-module.exports = function sendMessage(claimUuid, body, to) {
+module.exports = function sendMessage(messageId, body, to) {
+  debug(`sending message to ${to} in reply to ${messageId}`);
   return axios({
     method: "post",
     url: turnMsg,
     headers: {
-      Authorization: `Bearer ${conf.token}`,
-      "X-Turn-Claim-Extend": claimUuid,
+      Authorization: `Bearer ${TOKEN}`,
+      "X-Turn-In-Reply-To": messageId,
       "Content-Type": "application/json"
     },
     body: {

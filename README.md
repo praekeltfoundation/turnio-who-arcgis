@@ -13,7 +13,7 @@ This service assumes some ENV variables:
 - PG_DB_NAME
 
 ```bash
-npm install
-npm run sync # sync the database based on ENV or defaults
-npm start
+yarn
+yarn sync # sync the database based on ENV or defaults
+DEBUG="turn*" TOKEN="<your-turn-token>" yarn start
 ```
