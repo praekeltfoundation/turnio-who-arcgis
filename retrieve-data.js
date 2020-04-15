@@ -12,13 +12,14 @@ function retrieveData(countryCode) {
   debug(`retrieving statistics for ${countryCode}`);
   return Statistics.findOne({
     where: {
-      country_code: countryCode
-    }
-  }).then(obj => {
+      country_code: countryCode,
+    },
+  }).then((obj) => {
     if (obj && shouldNotHaveToUpdate(obj)) {
       return obj;
     }
 
+<<<<<<< HEAD
     return retrieveFromArcGis(countryCode)
       .then(data => {
         debug(`get data from arcgis`);
@@ -38,6 +39,22 @@ function retrieveData(countryCode) {
       .catch(err => {
         console.error(err.response);
       });
+=======
+    return retrieveFromArcGis(countryCode).then((data) => {
+      const features = data.features.sort(
+        (a, b) => a.attributes.date_epicrv - b.attributes.date_epicrv
+      );
+      const latest = features.pop().attributes;
+      return Statistics.create({
+        country_code: countryCode,
+        updated: latest.date_epicrv,
+        new_cases: latest.NewCase,
+        cum_cases: latest.CumCase,
+        new_deaths: latest.NewDeath,
+        cum_deaths: latest.CumDeath,
+      });
+    });
+>>>>>>> 84209e033ff9f76bd7309d28f9ad7ca8f390fd87
   });
 }
 
@@ -50,12 +67,17 @@ const featureServerUrl =
 function retrieveFromArcGis(countryCode) {
   return axios({
     method: "get",
+<<<<<<< HEAD
     url: `${featureServerUrl}/${query(countryCode)}`
   }).then(res => res.data);
+=======
+    url: `${featureServerUrl}/${query(countryCode)}`,
+  }).then((res) => res.data);
+>>>>>>> 84209e033ff9f76bd7309d28f9ad7ca8f390fd87
 }
 
 module.exports = {
   retrieveData: retrieveData,
   retrieveFromArcGis: retrieveFromArcGis,
-  shouldNotHaveToUpdate: shouldNotHaveToUpdate
+  shouldNotHaveToUpdate: shouldNotHaveToUpdate,
 };

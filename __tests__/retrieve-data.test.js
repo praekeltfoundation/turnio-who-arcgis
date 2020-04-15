@@ -23,6 +23,7 @@ describe("retrieve data from cache or server", () => {
     const data = await retrieveFromArcGis("NLD");
     done();
   });
+
   it("should not update if less than 8 hours ago", () => {
     const date = new Date();
     const mock = {
@@ -41,6 +42,7 @@ describe("retrieve data from cache or server", () => {
     expect(shouldNotHaveToUpdate(mock)).toBe(true);
     expect(shouldNotHaveToUpdate(oldMock)).toBe(false);
   });
+
   it("should get data from the database", () => {
     const date = new Date();
     const mock = {
