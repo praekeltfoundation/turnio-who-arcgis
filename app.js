@@ -35,9 +35,9 @@ app.post("/stats", async (req, res) => {
     .then(inspect("message response:"))
     .catch(err => {
       if (err.response) {
-        console.log(err.response.data);
-        console.log(err.response.status);
-        console.log(err.response.headers);
+        inspect("error data")(err.response.data);
+        inspect("error status")(err.response.status);
+        inspect("error headers")(err.response.headers);
       }
     });
 });
