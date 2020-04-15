@@ -18,9 +18,18 @@ Statistics.init(
     new_cases: DataTypes.INTEGER,
     cum_cases: DataTypes.INTEGER,
     new_deaths: DataTypes.INTEGER,
-    cum_deaths: DataTypes.INTEGER,
+    cum_deaths: DataTypes.INTEGER
   },
-  { sequelize, modelName: "statistics" }
+  {
+    sequelize,
+    modelName: "statistics",
+    indexes: [
+      {
+        using: "BTREE",
+        fields: ["country_code"]
+      }
+    ]
+  }
 );
 
 // class Country extends Model {}
@@ -48,5 +57,5 @@ Statistics.init(
 
 module.exports = {
   sequelize: sequelize,
-  Statistics: Statistics,
+  Statistics: Statistics
 };
