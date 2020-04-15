@@ -1,14 +1,15 @@
 const axios = require("axios").default;
 // const iso3166 = require('phone').iso3166_data
 
-const { Statistics } = require('./models')
+const { Statistics } = require("./models");
 
-function shouldNotHaveToUpdate (dataObj) {
-  const eightHrsInMs = (8 * 60 * 60 * 1000)
-  return (Date.now() - new Date(dataObj.updated)) < eightHrsInMs
+function shouldNotHaveToUpdate(dataObj) {
+  const eightHrsInMs = 8 * 60 * 60 * 1000;
+  return Date.now() - new Date(dataObj.updated) < eightHrsInMs;
 }
 
 function retrieveData(countryCode) {
+  debug(`retrieving statistics for ${countryCode}`);
   return Statistics.findOne({
     where: {
       country_code: countryCode
@@ -20,21 +21,27 @@ function retrieveData(countryCode) {
 
     return retrieveFromArcGis(countryCode)
       .then(data => {
-        const features = data.features.sort((a, b) => a.attributes.date_epicrv - b.attributes.date_epicrv)
-        const latest = features.pop().attributes
+        debug(`get data from arcgis`);
+        const features = data.features.sort(
+          (a, b) => a.attributes.date_epicrv - b.attributes.date_epicrv
+        );
+        const latest = features.pop().attributes;
         return Statistics.create({
           country_code: countryCode,
           updated: latest.date_epicrv,
           new_cases: latest.NewCase,
           cum_cases: latest.CumCase,
           new_deaths: latest.NewDeath,
-          cum_deaths: latest.CumDeath,
+          cum_deaths: latest.CumDeath
         });
-    });
+      })
+      .catch(err => {
+        console.error(err.response);
+      });
   });
 }
 
-const query = (country) =>
+const query = country =>
   `query?where=ISO_3_CODE+%3D+'${country}'&returnGeometry=false&outFields=NewCase,CumCase,NewDeath,CumDeath,date_epicrv&f=json`;
 
 const featureServerUrl =
@@ -43,9 +50,9 @@ const featureServerUrl =
 function retrieveFromArcGis(countryCode) {
   return axios({
     method: "get",
-    url: `${featureServerUrl}/${query(countryCode)}`,
-  }).then((res) => res.data);
-};
+    url: `${featureServerUrl}/${query(countryCode)}`
+  }).then(res => res.data);
+}
 
 module.exports = {
   retrieveData: retrieveData,

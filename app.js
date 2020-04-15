@@ -10,6 +10,7 @@ const app = express();
 app.use(express.json());
 
 app.post('/stats', async (req, res) => {
+    
   const user = req.body.contacts[0].wa_id;
   const claimUuid = req.body.messages[0].id;
   const [number, countryCode] = phone(`+${user}`);
