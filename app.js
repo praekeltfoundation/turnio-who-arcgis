@@ -1,20 +1,20 @@
-const express = require('express')
-const phone = require('phone')
+const express = require('express');
+const phone = require('phone');
 
-const {retrieveData} = require('./retrieve-data')
-const formatMessage = require('./format-message')
-const sendMessage = require('./send-message')
+const {retrieveData} = require('./retrieve-data');
+const formatMessage = require('./format-message');
+const sendMessage = require('./send-message');
 
-const app = express()
+const app = express();
 
-app.use(express.json())
+app.use(express.json());
 
 app.post('/stats', async (req, res) => {
-  const user = req.body.contacts[0].wa_id
-  const claimUuid = req.body.messages[0].id
-  const [number, countryCode] = phone(`+${user}`)
+  const user = req.body.contacts[0].wa_id;
+  const claimUuid = req.body.messages[0].id;
+  const [number, countryCode] = phone(`+${user}`);
   if (!number) {
-    return res.json({country: "unknown"})
+    return res.json({ country: "unknown" });
   }
 
   retrieveData(countryCode)
@@ -27,7 +27,7 @@ app.post('/stats', async (req, res) => {
         console.log(err.response.status);
         console.log(err.response.headers);
       }
-    })
-})
+    });
+});
 
-module.exports = app
+module.exports = app;

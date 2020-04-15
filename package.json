@@ -7,15 +7,17 @@
     "test": "tests"
   },
   "scripts": {
+    "sync": "node sync",
+    "pretest": "NODE_ENV=test yarn sync",
     "test": "jest --watchAll",
-    "sync": "node run sync",
     "start": "node index"
   },
   "keywords": [],
   "author": "fritzvd",
-  "license": "ISC",
+  "license": "SEE LICENSE IN LICENSE.md",
   "devDependencies": {
     "jest": "^25.3.0",
+    "prettier": "2.0.4",
     "sqlite3": "^4.1.1",
     "supertest": "^4.0.2"
   },

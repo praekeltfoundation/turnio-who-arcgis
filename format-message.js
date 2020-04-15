@@ -1,7 +1,8 @@
-const isonames = require('phone').iso3166_data
+const isonames = require("phone").iso3166_data;
 
-module.exports = function formatMessage (data) {
-  const countryName = isonames.find(item => data.country_code === item.alpha3).country_name
+module.exports = function formatMessage(data) {
+  const countryName = isonames.find((item) => data.country_code === item.alpha3)
+    .country_name;
   return {
     msg: `total (new) cases in last 24 hours
 
@@ -14,6 +15,6 @@ X confirmed cases (Y)
 X deaths (Y)
 X countries, areas or territories with cases (Y)
 `,
-    data: data
-  }
-}
+    data: data,
+  };
+};
