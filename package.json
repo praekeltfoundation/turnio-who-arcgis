@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "jest --watchAll",
-    "sync": "node sync",
+    "sync": "node run sync",
     "start": "node index"
   },
   "keywords": [],

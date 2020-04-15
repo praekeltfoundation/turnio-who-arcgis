@@ -3,6 +3,10 @@ const axios = require('axios').default
 
 const { Statistics } = require('./models')
 
+function shouldNotHaveToUpdate (dataObj) {
+  const eightHrsInMs = (8 * 60 * 60 * 1000)
+  return (Date.now() - new Date(dataObj.updated)) < eightHrsInMs
+}
 
 function retrieveData (countryCode) {
 
@@ -11,8 +15,9 @@ function retrieveData (countryCode) {
         country_code: countryCode
       }
     }).then(obj => {
-      if (obj)
+      if (obj && shouldNotHaveToUpdate(obj)) {
         return obj
+      }
 
       return retrieveFromArcGis(countryCode)
         .then(data => {
@@ -47,5 +52,6 @@ function retrieveFromArcGis (countryCode) {
 
 module.exports = {
   retrieveData: retrieveData,
-  retrieveFromArcGis: retrieveFromArcGis
+  retrieveFromArcGis: retrieveFromArcGis,
+  shouldNotHaveToUpdate: shouldNotHaveToUpdate
 };
