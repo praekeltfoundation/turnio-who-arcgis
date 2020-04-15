@@ -8,8 +8,8 @@ const sendMessage = require("./send-message");
 
 const app = express();
 
-const inspect = (label) => {
-  return (value) => {
+const inspect = label => {
+  return value => {
     debug(label, value);
     return value;
   };
@@ -17,12 +17,7 @@ const inspect = (label) => {
 
 app.use(express.json());
 
-<<<<<<< HEAD
-app.post('/stats', async (req, res) => {
-    
-=======
 app.post("/stats", async (req, res) => {
->>>>>>> 061c319823e8aed3325abf4d755a1b945a5aca65
   const user = req.body.contacts[0].wa_id;
   const messageId = req.body.messages[0].id;
   debug(`/stats called for ${user} with message id ${messageId}`);
@@ -34,11 +29,11 @@ app.post("/stats", async (req, res) => {
 
   retrieveData(countryCode)
     .then(inspect("cases data:"))
-    .then((casesData) => formatMessage(casesData))
+    .then(casesData => formatMessage(casesData))
     .then(inspect("formatted message:"))
-    .then((msg) => sendMessage(messageId, msg, user))
+    .then(msg => sendMessage(messageId, msg, user))
     .then(inspect("message response:"))
-    .catch((err) => {
+    .catch(err => {
       if (err.response) {
         console.log(err.response.data);
         console.log(err.response.status);
