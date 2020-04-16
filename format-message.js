@@ -6,12 +6,7 @@ module.exports = function formatMessage(data) {
   return `Total (new) cases in last 24 hours
 
 *${countryName}*
-X confirmed cases: ${data.cum_cases}
-X deaths: ${data.cum_deaths}
-
-*Global*
-X confirmed cases (Y)
-X deaths (Y)
-X countries, areas or territories with cases (Y)
+${data.cum_cases} confirmed cases: ${data.new_cases}
+${data.cum_cases} deaths: ${data.new_deaths}
 `;
 };
