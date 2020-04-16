@@ -1,10 +1,7 @@
 const express = require("express");
 const inspect = require("./inspect");
 
-const {
-  releaseConversation,
-  sendCountryDataBasedOnPhoneNumber
-} = require("./send-message");
+const { sendCountryDataBasedOnPhoneNumber } = require("./send-message");
 
 const app = express();
 
@@ -12,11 +9,8 @@ app.use(express.json());
 
 app.post("/stats", async (req, res) => {
   if (req.body.statuses) {
-    inspect("status message")(req.statuses);
     const status = req.body.statuses[0];
-    if (status.status === "sent" || status.status === "delivered") {
-      return releaseConversation(status.id);
-    }
+    inspect("status message")(status);
     return res.json({ status: "ok" });
   }
 

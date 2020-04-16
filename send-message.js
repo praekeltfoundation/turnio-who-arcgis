@@ -14,18 +14,6 @@ const client = axios.create({
   headers: { Authorization: `Bearer ${TOKEN}` }
 });
 
-function releaseConversation(id) {
-  return client
-    .post(`/v1/messages/${id}/automation`, {
-      headers: {
-        Accept: "application/vnd.v1+json",
-        "X-Turn-Claim-Release": id
-      }
-    })
-    .then(response => response.json())
-    .catch(inspect("releasing error"));
-}
-
 function sendMessage(messageId, body, to) {
   debug(`sending message to ${to} in reply to ${messageId}`);
 
@@ -78,7 +66,6 @@ function sendCountryDataBasedOnPhoneNumber(req, res) {
 }
 
 module.exports = {
-  releaseConversation,
   sendCountryDataBasedOnPhoneNumber,
   sendMessage
 };
