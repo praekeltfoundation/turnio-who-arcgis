@@ -38,7 +38,7 @@ describe("retrieve data from cache or server", () => {
       updatedAt: date
     };
     const oldDate = new Date(new Date() - 30000000);
-    const oldMock = { ...mock, updated: oldDate };
+    const oldMock = { ...mock, updatedAt: oldDate };
     expect(shouldNotHaveToUpdate(mock)).toBe(true);
     expect(shouldNotHaveToUpdate(oldMock)).toBe(false);
   });

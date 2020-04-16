@@ -17,13 +17,8 @@ describe("format-message tests", () => {
     const formattedExample = `Total (new) cases in last 24 hours
 
 *South Africa*
-X confirmed cases: 1845
-X deaths: 18
-
-*Global*
-X confirmed cases (Y)
-X deaths (Y)
-X countries, areas or territories with cases (Y)
+1845 confirmed cases (96)
+18 deaths (5)
 `;
     expect(formatMsg(mockStatistic)).toEqual(formattedExample);
   });

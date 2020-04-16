@@ -3,8 +3,8 @@ const debug = require("debug")("turn");
 const { Statistics } = require("./models");
 
 function shouldNotHaveToUpdate(dataObj) {
-  const eightHrsInMs = 8 * 60 * 60 * 1000;
-  return Date.now() - new Date(dataObj.updatedAt) < eightHrsInMs;
+  const hourInMs = 60 * 60 * 1000;
+  return Date.now() - new Date(dataObj.updatedAt) < hourInMs;
 }
 
 function retrieveData(countryCode) {
