@@ -14,12 +14,7 @@ app.post("/stats", async (req, res) => {
     return res.json({ status: "ok" });
   }
 
-  if (
-    req.body.contacts &&
-    req.body.messages &&
-    req.body.contacts.length > 0 &&
-    req.body.messages.length > 0
-  ) {
+  if (req.body.messages) {
     return sendCountryDataBasedOnPhoneNumber(req, res).then(() =>
       res.json({ status: "ok" })
     );
