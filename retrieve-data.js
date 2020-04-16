@@ -5,21 +5,22 @@ const { Statistics } = require("./models");
 
 function shouldNotHaveToUpdate(dataObj) {
   const eightHrsInMs = 8 * 60 * 60 * 1000;
-  return Date.now() - new Date(dataObj.updated) < eightHrsInMs;
+  return Date.now() - new Date(dataObj.updatedAt) < eightHrsInMs;
 }
 
 function retrieveData(countryCode) {
   return Statistics.findOne({
     where: {
-      country_code: countryCode
-    }
-  }).then(obj => {
+      country_code: countryCode,
+    },
+    order: [["updatedAt", "DESC"]],
+  }).then((obj) => {
     if (obj && shouldNotHaveToUpdate(obj)) {
       return obj;
     }
 
     return retrieveFromArcGis(countryCode)
-      .then(data => {
+      .then((data) => {
         const features = data.features.sort(
           (a, b) => a.attributes.date_epicrv - b.attributes.date_epicrv
         );
@@ -30,16 +31,16 @@ function retrieveData(countryCode) {
           new_cases: latest.NewCase,
           cum_cases: latest.CumCase,
           new_deaths: latest.NewDeath,
-          cum_deaths: latest.CumDeath
+          cum_deaths: latest.CumDeath,
         });
       })
-      .catch(err => {
+      .catch((err) => {
         console.error(err.response);
       });
   });
 }
 
-const query = country =>
+const query = (country) =>
   `query?where=ISO_3_CODE+%3D+'${country}'&returnGeometry=false&outFields=NewCase,CumCase,NewDeath,CumDeath,date_epicrv&f=json`;
 
 const featureServerUrl =
@@ -48,12 +49,12 @@ const featureServerUrl =
 function retrieveFromArcGis(countryCode) {
   return axios({
     method: "get",
-    url: `${featureServerUrl}/${query(countryCode)}`
-  }).then(res => res.data);
+    url: `${featureServerUrl}/${query(countryCode)}`,
+  }).then((res) => res.data);
 }
 
 module.exports = {
   retrieveData: retrieveData,
   retrieveFromArcGis: retrieveFromArcGis,
-  shouldNotHaveToUpdate: shouldNotHaveToUpdate
+  shouldNotHaveToUpdate: shouldNotHaveToUpdate,
 };
