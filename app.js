@@ -12,9 +12,7 @@ app.post("/stats", async (req, res) => {
     const status = req.body.statuses[0];
     inspect("status message")(status);
     return res.json({ status: "ok" });
-  }
-
-  if (req.body.messages) {
+  } else if (req.body.messages) {
     return sendCountryDataBasedOnPhoneNumber(req, res).then(() =>
       res.json({ status: "ok" })
     );
