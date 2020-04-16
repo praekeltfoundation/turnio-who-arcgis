@@ -27,6 +27,10 @@ Statistics.init(
       {
         using: "BTREE",
         fields: ["country_code"]
+      },
+      {
+        using: "BTREE",
+        fields: ["updated"]
       }
     ]
   }
