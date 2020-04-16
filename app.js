@@ -9,8 +9,10 @@ app.use(express.json());
 
 app.post("/stats", async (req, res) => {
   if (req.body.statuses) {
-    const status = req.body.statuses[0];
-    inspect("status message")(status);
+    const { recipient_id, status } = req.body.statuses[0];
+    inspect("status message: ")(
+      `recipient_id: ${recipient_id}, status: ${status}`
+    );
     return res.json({ status: "ok" });
   } else if (req.body.messages) {
     return sendCountryDataBasedOnPhoneNumber(req, res).then(() =>

@@ -11,7 +11,7 @@ const formatMessage = require("./format-message");
 const client = axios.create({
   baseURL: "https://whatsapp.turn.io",
   timeout: 300,
-  headers: { Authorization: `Bearer ${TOKEN}` }
+  headers: { Authorization: `Bearer ${TOKEN}` },
 });
 
 function sendMessage(messageId, body, to) {
@@ -26,18 +26,18 @@ function sendMessage(messageId, body, to) {
         to: to,
         type: "text",
         text: {
-          body: body
-        }
+          body: body,
+        },
       },
       {
         headers: {
           "X-Turn-In-Reply-To": messageId,
           "Content-Type": "application/json",
-          Accept: "application/json"
-        }
+          Accept: "application/json",
+        },
       }
     )
-    .then(response => response.json());
+    .then((response) => response.json());
 }
 
 function sendCountryDataBasedOnPhoneNumber(req, res) {
@@ -51,12 +51,11 @@ function sendCountryDataBasedOnPhoneNumber(req, res) {
   debug(`The country code is: ${countryCode}`);
 
   return retrieveData(countryCode)
-    .then(inspect("cases data:"))
-    .then(casesData => formatMessage(casesData))
+    .then((casesData) => formatMessage(casesData))
     .then(inspect("formatted message:"))
-    .then(msg => sendMessage(messageId, msg, user))
+    .then((msg) => sendMessage(messageId, msg, user))
     .then(inspect("message response:"))
-    .catch(err => {
+    .catch((err) => {
       if (err.response) {
         inspect("error data")(err.response.data);
         inspect("error status")(err.response.status);
@@ -67,5 +66,5 @@ function sendCountryDataBasedOnPhoneNumber(req, res) {
 
 module.exports = {
   sendCountryDataBasedOnPhoneNumber,
-  sendMessage
+  sendMessage,
 };
