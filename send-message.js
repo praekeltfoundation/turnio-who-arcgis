@@ -1,18 +1,35 @@
 const axios = require("axios");
 const debug = require("debug")("turn");
+const inspect = require("./inspect");
+const phone = require("phone");
 
 const TOKEN = process.env.TOKEN;
 
-// const turnMsg = `https://whatsapp.turn.io/v1/messages`;
-module.exports = function sendMessage(messageId, body, to) {
+const { retrieveData } = require("./retrieve-data");
+const formatMessage = require("./format-message");
+
+const client = axios.create({
+  baseURL: "https://whatsapp.turn.io",
+  timeout: 300,
+  headers: { Authorization: `Bearer ${TOKEN}` }
+});
+
+function releaseConversation(id) {
+  return client
+    .post(`/v1/messages/${id}/automation`, {
+      headers: {
+        Accept: "application/vnd.v1+json",
+        "X-Turn-Claim-Release": id
+      }
+    })
+    .then(response => response.json())
+    .catch(inspect("releasing error"));
+}
+
+function sendMessage(messageId, body, to) {
   debug(`sending message to ${to} in reply to ${messageId}`);
 
-  return axios
-    .create({
-      baseURL: "https://whatsapp.turn.io",
-      timeout: 300,
-      headers: { Authorization: `Bearer ${TOKEN}` },
-    })
+  return client
     .post(
       "/v1/messages",
       {
@@ -21,15 +38,47 @@ module.exports = function sendMessage(messageId, body, to) {
         to: to,
         type: "text",
         text: {
-          body: body,
-        },
+          body: body
+        }
       },
       {
         headers: {
           "X-Turn-In-Reply-To": messageId,
           "Content-Type": "application/json",
-        },
+          Accept: "application/json"
+        }
       }
     )
-    .then((response) => response.json());
+    .then(response => response.json());
+}
+
+function sendCountryDataBasedOnPhoneNumber(req, res) {
+  const user = req.body.contacts[0].wa_id;
+  const messageId = req.body.messages[0].id;
+  debug(`/stats called for ${user} with message id ${messageId}`);
+  const [number, countryCode] = phone(`+${user}`);
+  if (!number) {
+    return res.json({ country: "unknown" });
+  }
+  debug(`The country code is: ${countryCode}`);
+
+  return retrieveData(countryCode)
+    .then(inspect("cases data:"))
+    .then(casesData => formatMessage(casesData))
+    .then(inspect("formatted message:"))
+    .then(msg => sendMessage(messageId, msg, user))
+    .then(inspect("message response:"))
+    .catch(err => {
+      if (err.response) {
+        inspect("error data")(err.response.data);
+        inspect("error status")(err.response.status);
+        inspect("error headers")(err.response.headers);
+      }
+    });
+}
+
+module.exports = {
+  releaseConversation,
+  sendCountryDataBasedOnPhoneNumber,
+  sendMessage
 };

@@ -1,45 +1,37 @@
 const express = require("express");
-const phone = require("phone");
-const debug = require("debug")("turn");
+const inspect = require("./inspect");
 
-const { retrieveData } = require("./retrieve-data");
-const formatMessage = require("./format-message");
-const sendMessage = require("./send-message");
+const {
+  releaseConversation,
+  sendCountryDataBasedOnPhoneNumber
+} = require("./send-message");
 
 const app = express();
-
-const inspect = label => {
-  return value => {
-    debug(label, value);
-    return value;
-  };
-};
 
 app.use(express.json());
 
 app.post("/stats", async (req, res) => {
-  const user = req.body.contacts[0].wa_id;
-  const messageId = req.body.messages[0].id;
-  debug(`/stats called for ${user} with message id ${messageId}`);
-  const [number, countryCode] = phone(`+${user}`);
-  if (!number) {
-    return res.json({ country: "unknown" });
+  if (req.body.statuses) {
+    inspect("status message")(req.statuses);
+    const status = req.body.statuses[0];
+    if (status.status === "sent" || status.status === "delivered") {
+      return releaseConversation(status.id);
+    }
+    return res.json({ status: "ok" });
   }
-  debug(`The country code is: ${countryCode}`);
 
-  retrieveData(countryCode)
-    .then(inspect("cases data:"))
-    .then(casesData => formatMessage(casesData))
-    .then(inspect("formatted message:"))
-    .then(msg => sendMessage(messageId, msg, user))
-    .then(inspect("message response:"))
-    .catch(err => {
-      if (err.response) {
-        inspect("error data")(err.response.data);
-        inspect("error status")(err.response.status);
-        inspect("error headers")(err.response.headers);
-      }
-    });
+  if (
+    req.body.contacts &&
+    req.body.messages &&
+    req.body.contacts.length > 0 &&
+    req.body.messages.length > 0
+  ) {
+    return sendCountryDataBasedOnPhoneNumber(req, res).then(() =>
+      res.json({ status: "ok" })
+    );
+  } else {
+    return res.status(501).send("sorry");
+  }
 });
 
 module.exports = app;
