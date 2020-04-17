@@ -4,11 +4,13 @@ const { Statistics } = require("./models");
 
 function shouldNotHaveToUpdate(dataObj) {
   const hourInMs = 60 * 60 * 1000;
-  return Date.now() - new Date(dataObj.updatedAt) < hourInMs;
+  const diffMoreThanHour = new Date() - new Date(dataObj.updatedAt) < hourInMs;
+  debug(`Difference is less than an hour: ${diffMoreThanHour}`);
+  return diffMoreThanHour;
 }
 
 function retrieveData(countryCode) {
-  return Statistics.findAll({
+  return Statistics.findOne({
     where: {
       country_code: countryCode
     },

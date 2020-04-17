@@ -14,11 +14,18 @@ describe("format-message tests", () => {
       createdAt: date,
       updatedAt: date
     };
-    const formattedExample = `Total (new) cases in last 24 hours
+    const formattedExample = `*Latest numbers*
+_Latest data reported by national authorities to the World Health Organization_
 
 *South Africa*
-1845 confirmed cases (96)
-18 deaths (5)
+1845 confirmed cases (96 reported today)
+18 deaths (5 reported today)
+
+*Novel Coronavirus (COVID-19) Situation dashboard*
+This interactive dashboard/map provides the latest global numbers and numbers by country of COVID-19 cases on a daily basis.
+who.sprnklr.com
+
+*For country numbers, find the latest situation reports here:* https://www.who.int/emergencies/diseases/novel-coronavirus-2019/situation-reports
 `;
     expect(formatMsg(mockStatistic)).toEqual(formattedExample);
   });
