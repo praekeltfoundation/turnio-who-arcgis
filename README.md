@@ -4,16 +4,35 @@ This service returns data on covid-19 cases from a local cache that is updated b
 
 ## Getting started
 
-This service assumes some ENV variables:
+This service requires the following ENV variables:
 
-- PG_USER
-- PG_PASSWORD
-- PG_PORT
-- PG_ADDRESS
-- PG_DB_NAME
+>
+
+    TOKEN=<your-turn-token>
+
+It can be configured with the following optional ENV variables:
+
+>
+
+    DATABASE_URL="sqlite://cache.db
+    DEBUG="turn*"
 
 ```bash
 yarn
 yarn sync # sync the database based on ENV or defaults
-DEBUG="turn*" TOKEN="<your-turn-token>" yarn start
+yarn start
 ```
+
+## Using the docker image
+
+To sync (migrate) the database
+
+> docker run who-arcgis:latest migrate
+
+To run the HTTP server
+
+> docker run who-arcgis:latest run
+
+To do both in one go
+
+> docker run who-arcgis:latest migrate_and_run
