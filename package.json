@@ -10,7 +10,8 @@
     "sync": "node sync",
     "pretest": "NODE_ENV=test yarn sync",
     "test": "jest --watchAll",
-    "start": "node index"
+    "start": "node index",
+    "postversion": "git push && git push --tags"
   },
   "keywords": [],
   "author": "fritzvd",
