@@ -7,7 +7,7 @@ const { sendCountryDataBasedOnPhoneNumber } = require("./send-message");
 const app = express();
 
 app.use(express.json());
-app.use(morgan("combined"));
+app.use(morgan("short"));
 
 if (process.env.SENTRY_DSN) {
   const Sentry = require("@sentry/node");
