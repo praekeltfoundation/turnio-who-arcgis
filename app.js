@@ -8,6 +8,14 @@ const app = express();
 
 app.use(express.json());
 app.use(morgan("combined"));
+
+if (process.env.SENTRY_DSN) {
+  const Sentry = require("@sentry/node");
+  Sentry.init({ dsn: process.env.SENTRY_DSN });
+
+  app.use(Sentry.Handlers.requestHandler()).use(Sentry.Handlers.errorHandler());
+}
+
 app.post("/stats", async (req, res) => {
   if (req.body.statuses) {
     const { recipient_id, status } = req.body.statuses[0];

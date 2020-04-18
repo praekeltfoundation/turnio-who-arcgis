@@ -15,6 +15,7 @@ It can be configured with the following optional ENV variables:
 >
 
     DATABASE_URL="sqlite://cache.db
+    SENTRY_DSN="<sentry-dsn>"
     DEBUG="turn*"
 
 ```bash
