@@ -1,6 +1,6 @@
 const axios = require("axios");
 const {
-  retrieveFromArcGis,
+  retrieveCountryStatsFromArcGis,
   shouldNotHaveToUpdate
 } = require("../retrieve-data");
 
@@ -13,14 +13,14 @@ axios.mockImplementation(() =>
 
 describe("retrieve data from cache or server", () => {
   it("should try to fetch data from arcGIS", async done => {
-    const data = await retrieveFromArcGis("NLD");
+    const data = await retrieveCountryStatsFromArcGis("NLD");
     done();
   });
 });
 
 describe("retrieve data from cache or server", () => {
   it("should try to fetch data from arcGIS", async done => {
-    const data = await retrieveFromArcGis("NLD");
+    const data = await retrieveCountryStatsFromArcGis("NLD");
     done();
   });
 
