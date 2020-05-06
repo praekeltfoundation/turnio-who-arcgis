@@ -119,7 +119,6 @@ return client
   .get({
       url: `${turnUrl}/v1/contacts/${msisdn}/profile`,
       headers: {
-        "Authorization": "Bearer token",
         "Accept": "application/vnd.v1+json"
       },
     }).then(res => res.data.fields.language);
