@@ -113,9 +113,22 @@ function retrieveGlobalStatsFromArcGis() {
   }).then(res => res.data);
 }
 
+function retrieveContactLanguage(client, msisdn) {
+  debug("retrieving contact from Turn");
+return client
+  .get({
+      url: `${turnUrl}/v1/contacts/${msisdn}/profile`,
+      headers: {
+        "Authorization": "Bearer token",
+        "Accept": "application/vnd.v1+json"
+      },
+    }).then(res => res.data.fields.language);
+  }
+
 module.exports = {
   retrieveCountryData: retrieveCountryData,
   retrieveGlobalData: retrieveGlobalData,
   retrieveCountryStatsFromArcGis: retrieveCountryStatsFromArcGis,
-  shouldNotHaveToUpdate: shouldNotHaveToUpdate
+  shouldNotHaveToUpdate: shouldNotHaveToUpdate,
+  retrieveContactLanguage: retrieveContactLanguage
 };
