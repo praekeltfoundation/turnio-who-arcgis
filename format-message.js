@@ -4,27 +4,35 @@ module.exports = function formatMessage(countryData, globalData, languageCode) {
   const countryName = isonames.find(
     item => countryData.country_code === item.alpha3
   ).country_name;
+
+  // The translations were writting for CET so we use that
+  const date = new Date((new Date().getTime())+1 * 60 * 60 * 1000) ;
+
   switch (languageCode) {
     case "ITA":
-      return ita_template(countryName, countryData, globalData);
+      return ita_template(countryName, countryData, globalData, date);
     case "FRA":
-      return fra_template(countryName, countryData, globalData);
+      return fra_template(countryName, countryData, globalData, date);
     case "POR":
-      return por_template(countryName, countryData, globalData);
+      return por_template(countryName, countryData, globalData, date);
     case "ARA":
-      return ara_template(countryName, countryData, globalData);
+      return ara_template(countryName, countryData, globalData, date);
     case "HIN":
-      return hin_template(countryName, countryData, globalData);
+      return hin_template(countryName, countryData, globalData, date);
     case "SPA":
-      return spa_template(countryName, countryData, globalData);
+      return spa_template(countryName, countryData, globalData, date);
     default:
-      return eng_template(countryName, countryData, globalData);
+      return eng_template(countryName, countryData, globalData, date);
   }
 };
 
-const eng_template = (countryName, countryData, globalData) => `"*Latest numbers* 🔢
+const eng_template = (countryName, countryData, globalData, date) => `*Latest numbers* 🔢
 
-_Data as reported by national authorities by 00:00 CET X Month 2020_
+_Data as reported by national authorities by ${
+  date.toLocaleTimeString('ENG', {hour:"numeric", minute:"numeric"})
+} CET ${
+  date.toLocaleDateString('ENG', {day:"numeric", month:"long", year: "numeric"})
+}_
 
 Total (new) cases in last 24 hours
 
@@ -48,9 +56,13 @@ https://covid19.who.int/
 📌 Reply 0 for Menu
 `;
 
-const ita_template = (countryName, countryData, globalData) => `*Ultimi casi* 🔢
+const ita_template = (countryName, countryData, globalData, date) => `*Ultimi casi* 🔢
 
-_Dati segnalati dalle autorità nazionali entro le 10:00 CET  X month 2020_
+_Dati segnalati dalle autorità nazionali entro le ${
+  date.toLocaleTimeString('ITA', {hour:"numeric", minute:"numeric"})
+} CET ${
+  date.toLocaleDateString('ITA', {day:"numeric", month:"long", year: "numeric"})
+}_
 
 Totale (nuovi) casi nelle ultime 24 ore
 
@@ -70,9 +82,15 @@ Questa dashboard / mappa interattiva fornisce gli ultimi numeri globali e numeri
 *Per i numeri dei paesi, trova gli ultimi rapporti sulla situazione qui:* https://www.who.int/emergencies/diseases/novel-coronavirus-2019/situation-reports
 `;
 
-const fra_template = (countryName, countryData, globalData) => `*Derniers chiffres* 🔢
+const fra_template = (countryName, countryData, globalData, date) => `*Derniers chiffres* 🔢
 
-_Données communiquées par les autorités nationales au plus tard le DD/MM/YYYY à 00 h 00 CET_
+_Données communiquées par les autorités nationales au plus tard le ${
+  date.toLocaleDateString('FRA', {day:"numeric", month:"numeric", year: "numeric"})
+} à ${
+  date.toLocaleTimeString('FRA', {hour:"numeric"})
+} h ${
+  date.toLocaleTimeString('FRA', {minute:"numeric"})
+} CET_
 
 total (nouveaux cas au cours des dernières 24 heures)
 
@@ -98,9 +116,17 @@ https://covid19.who.int
 📌 Tapez 0 pour le menu
 `;
 
-const por_template = (countryName, countryData, globalData) => `*Números atualizados* 🔢
+const por_template = (countryName, countryData, globalData, date) => `*Números atualizados* 🔢
 
-_Dados comunicados pelas autoridades nacionais até às 00:00 CET de X de X de 2020_
+_Dados comunicados pelas autoridades nacionais até às ${
+  date.toLocaleTimeString('POR', {hour:"numeric", minute:"numeric"})
+} CET de ${
+  date.toLocaleDateString('POR', {day:"numeric"})
+} de ${
+  date.toLocaleDateString('POR', {month:"long"})
+} de ${
+  date.toLocaleDateString('POR', {year:"numeric"})
+}_
 
 Número total de casos (novos) nas últimas 24 horas
 
@@ -124,9 +150,13 @@ https://covid19.who.int (não disponível em português)
 📌 Responda 0 para voltar ao Menu
 `;
 
-const ara_template = (countryName, countryData, globalData) => `*أحدث الأرقام* 🔢
+const ara_template = (countryName, countryData, globalData, date) => `*أحدث الأرقام* 🔢
 
-_البيانات التي أبلغت عنها السلطات الوطنية بحلول الساعة 10:00 بتوقيت وسط أوروبا X X 2020_
+_البيانات التي أبلغت عنها السلطات الوطنية بحلول الساعة ${
+  date.toLocaleTimeString('ARA', {hour:"numeric", minute:"numeric"})
+} بتوقيت وسط أوروبا ${
+  date.toLocaleDateString('ARA', {day:"numeric", month:"long", year: "numeric"})
+}_
 
 إجمالي الحالات (الجديدة) في الـ 24 ساعة الماضية
 
@@ -153,9 +183,13 @@ https://bit.ly/2UCPW2g
  📌 أرسل 0 للقائمة الرئيسية
 `;
 
-const hin_template = (countryName, countryData, globalData) => `*मौजूदा संख्या* 🔢
+const hin_template = (countryName, countryData, globalData, date) => `*मौजूदा संख्या* 🔢
  
-_Data राष्ट्रीय अधिकारियों द्वारा 10:00 सीईटी 4 मई 2020_ द्वारा रिपोर्ट की गई_
+_Data राष्ट्रीय अधिकारियों द्वारा ${
+  date.toLocaleTimeString('HIN', {hour:"numeric", minute:"numeric"})
+} सीईटी ${
+  date.toLocaleDateString('HIN', {day:"numeric", month:"long", year: "numeric"})
+}_ द्वारा रिपोर्ट की गई_
 
 पिछले 24 घंटों में कुल (नए) मामले
 
@@ -180,9 +214,13 @@ https://www.who.int/emergencies/diseases/novel-coronavirus-2019/situation-report
 📌 0 से उत्तर दें प्रथम सूची के लिए
 `;
 
-const spa_template = (countryName, countryData, globalData) => `*Últimas cifras* 🔢
+const spa_template = (countryName, countryData, globalData, date) => `*Últimas cifras* 🔢
  
-_Datos según lo informado por las autoridades nacionales antes de las XX:XX CET DAY de MONTH de YEAR_
+_Datos según lo informado por las autoridades nacionales antes de las ${
+  date.toLocaleTimeString('SPA', {hour:"numeric", minute:"numeric"})
+} CET ${
+  date.toLocaleDateString('SPA', {day:"numeric", month:"long", year: "numeric"})
+}_
  
 total (nuevos) casos en las últimas 24 horas
 
