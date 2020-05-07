@@ -116,8 +116,9 @@ function retrieveGlobalStatsFromArcGis() {
 function retrieveContactLanguage(client, msisdn) {
   debug("retrieving contact from Turn");
 return client
-  .get({
-      url: `${turnUrl}/v1/contacts/${msisdn}/profile`,
+  .get(
+    `/v1/contacts/${msisdn}/profile`,
+    {
       headers: {
         "Accept": "application/vnd.v1+json"
       },
