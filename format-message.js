@@ -12,27 +12,35 @@ module.exports = function formatMessage(countryData, globalData, languageCode) {
   }
 };
 
-const eng_template = (countryName, countryData, globalData) => `*Latest numbers*
-_Latest data reported by national authorities to the World Health Organization_
+const eng_template = (countryName, countryData, globalData) => `"*Latest numbers* 🔢
+
+_Data as reported by national authorities by 00:00 CET X Month 2020_
+
+Total (new) cases in last 24 hours
 
 *${countryName}*
 ${countryData.cum_cases} confirmed cases (${
-    countryData.new_cases
-  } reported today)
-${countryData.cum_deaths} deaths (${countryData.new_deaths} reported today)
+  countryData.new_cases
+})
+${countryData.cum_deaths} deaths (${countryData.new_deaths})
 
-*Global*
-${globalData.cum_cases} confirmed cases (${globalData.new_cases} reported today)
-${globalData.cum_deaths} deaths (${globalData.new_deaths} reported today)
+*Global* 
+${globalData.cum_cases} confirmed cases (${globalData.new_cases})
+${globalData.cum_deaths} deaths (${globalData.new_deaths})
 
 *Novel Coronavirus (COVID-19) Situation dashboard*
-This interactive dashboard/map provides the latest global numbers and numbers by country of COVID-19 cases on a daily basis.
+This interactive dashboard/map provides the latest global numbers and numbers by country of COVID-19 cases on a daily basis. 
 https://covid19.who.int/
 
-*For country numbers, find the latest situation reports here:* https://www.who.int/emergencies/diseases/novel-coronavirus-2019/situation-reports
+*For country numbers, find the latest situation reports here:*
+https://www.who.int/emergencies/diseases/novel-coronavirus-2019/situation-reports"
+
+📌 Reply 6 for News & Press
+📌 Reply 0 for Menu
 `;
 
 const ita_template = (countryName, countryData, globalData) => `*Ultimi casi* 🔢
+
 _Dati segnalati dalle autorità nazionali entro le 10:00 CET  X month 2020_
 
 Totale (nuovi) casi nelle ultime 24 ore
