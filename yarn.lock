@@ -2700,6 +2700,11 @@ levn@~0.3.0:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
 
+localized-countries@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/localized-countries/-/localized-countries-1.0.2.tgz#df8de23b2adb195266d849e706686a84b826c7df"
+  integrity sha1-343iOyrbGVJm2EnnBmhqhLgmx98=
+
 locate-path@^5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/locate-path/-/locate-path-5.0.0.tgz#1afba396afd676a6d42504d0a67a3a7eb9f62aa0"

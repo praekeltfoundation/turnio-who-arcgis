@@ -1,25 +1,52 @@
 const isonames = require("phone").iso3166_data;
+const italian = require('localized-countries')('it')
+const french = require('localized-countries')('fr')
+const português = require('localized-countries')('pt')
+const arabic = require('localized-countries')('ar')
+const hindi = require('localized-countries')('hi')
+const spanish = require('localized-countries')('es')
+
 
 module.exports = function formatMessage(countryData, globalData, languageCode) {
-  const countryName = isonames.find(
-    item => countryData.country_code === item.alpha3
-  ).country_name;
+  if (countryData.country_code_2 == null || languageCode == "ENG") {
+    var countryName = isonames.find(
+      item => countryData.country_code === item.alpha3
+    ).country_name;
+  }
 
   // The translations were writting for CET so we use that
   const date = new Date((new Date().getTime())+1 * 60 * 60 * 1000) ;
 
   switch (languageCode) {
     case "ITA":
+      if (countryData.country_code_2) {
+        countryName = italian.get(countryData.country_code_2)
+      }
       return ita_template(countryName, countryData, globalData, date);
     case "FRA":
+      if (countryData.country_code_2) {
+        countryName = french.get(countryData.country_code_2)
+      }
       return fra_template(countryName, countryData, globalData, date);
     case "POR":
+      if (countryData.country_code_2) {
+        countryName = português.get(countryData.country_code_2)
+      }
       return por_template(countryName, countryData, globalData, date);
     case "ARA":
+      if (countryData.country_code_2) {
+        countryName = arabic.get(countryData.country_code_2)
+      }
       return ara_template(countryName, countryData, globalData, date);
     case "HIN":
+      if (countryData.country_code_2) {
+        countryName = hindi.get(countryData.country_code_2)
+      }
       return hin_template(countryName, countryData, globalData, date);
     case "SPA":
+      if (countryData.country_code_2) {
+        countryName = spanish.get(countryData.country_code_2)
+      }
       return spa_template(countryName, countryData, globalData, date);
     default:
       return eng_template(countryName, countryData, globalData, date);
