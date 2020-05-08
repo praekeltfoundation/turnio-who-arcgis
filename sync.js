@@ -1,2 +1,4 @@
 const sequelize = require("./models").sequelize;
-sequelize.sync();
+// This will generate drop commands for existing data
+// This currently acceptable since the models are only used for caching
+sequelize.sync({ alter: true });
