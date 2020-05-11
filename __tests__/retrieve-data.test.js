@@ -1,11 +1,14 @@
 const axios = require("axios");
 const {
   retrieveCountryStatsFromArcGis,
-  shouldNotHaveToUpdate
+  shouldNotHaveToUpdate,
+  retrieveContactLanguage
 } = require("../retrieve-data");
 
-jest.mock("axios");
-axios.mockImplementation(() =>
+const mockAxios = jest.genMockFromModule('axios')
+mockAxios.create = jest.fn(() => mockAxios)
+
+mockAxios.mockImplementation(() =>
   Promise.resolve(() => ({
     features: [{ attributes: {} }]
   }))
@@ -56,5 +59,28 @@ describe("retrieve data from cache or server", () => {
       createdAt: date,
       updatedAt: date
     };
+  });
+});
+
+describe("retrieve contact language from Turn", () => {
+  it("should try to fetch Language from Turn", async () => {
+    mockAxios.get.mockImplementationOnce(() =>
+      Promise.resolve({
+        "data": { "fields": { "language": "SPA"} }
+      }),
+    )
+
+    const lang = await retrieveContactLanguage(mockAxios.create(), "+16315551234");
+    expect(lang).toBe("SPA");
+  });
+  it("should return null for language if it doesn't exist", async () => {
+    mockAxios.get.mockImplementationOnce(() =>
+      Promise.resolve({
+        "data": { "fields": { "location": null} }
+      }),
+    )
+
+    const lang = await retrieveContactLanguage(mockAxios.create(), "+16315551234");
+    expect(lang).toBeUndefined();
   });
 });
