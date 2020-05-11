@@ -116,15 +116,15 @@ function retrieveGlobalStatsFromArcGis() {
 
 function retrieveContactLanguage(client, msisdn) {
   debug("retrieving contact from Turn");
-return client
-  .get(
-    `/v1/contacts/${msisdn}/profile`,
-    {
-      headers: {
-        "Accept": "application/vnd.v1+json"
-      },
-    }).then(res => res.data.fields.language);
-  }
+  return client
+    .get(
+      `/v1/contacts/${msisdn}/profile`,
+      {
+        headers: {
+          "Accept": "application/vnd.v1+json"
+        },
+      }).then(res => res.data.fields.language);
+    }
 
 module.exports = {
   retrieveCountryData: retrieveCountryData,
