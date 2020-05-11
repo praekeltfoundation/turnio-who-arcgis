@@ -113,7 +113,7 @@ _Données communiquées par les autorités nationales au plus tard le ${
   date.toLocaleDateString('FRA', {day:"numeric", month:"numeric", year: "numeric"})
 } à ${
   date.toLocaleTimeString('FRA', {hour:"numeric"})
-} h ${
+} ${
   date.toLocaleTimeString('FRA', {minute:"numeric"})
 } CET_
 
@@ -209,7 +209,7 @@ https://bit.ly/2UCPW2g
 `;
 
 const hin_template = (countryName, countryData, globalData, date) => `*मौजूदा संख्या* 🔢
- 
+
 _Data राष्ट्रीय अधिकारियों द्वारा ${
   date.toLocaleTimeString('HIN', {hour:"numeric", minute:"numeric"})
 } सीईटी ${
@@ -231,7 +231,7 @@ ${globalData.cum_deaths} मौतें (${globalData.new_deaths})
 *नावेल कोरोनावायरस (COVID-19) स्थिति डैशबोर्ड*
 यह इंटरएक्टिव डैशबोर्ड / नक्शा विश्व और देशों में नावेल कोरोनावायरस (COVID-19) के संक्रमित व्यक्तियों की संख्या बताता है।
 https://covid19.who.int
- 
+
 *देश में संक्रमित व्यक्तियों की मौजूदा संख्या यहाँ पर मिलेगी |*
 https://www.who.int/emergencies/diseases/novel-coronavirus-2019/situation-reports/
 
@@ -240,13 +240,13 @@ https://www.who.int/emergencies/diseases/novel-coronavirus-2019/situation-report
 `;
 
 const spa_template = (countryName, countryData, globalData, date) => `*Últimas cifras* 🔢
- 
+
 _Datos según lo informado por las autoridades nacionales antes de las ${
   date.toLocaleTimeString('SPA', {hour:"numeric", minute:"numeric"})
 } CET ${
   date.toLocaleDateString('SPA', {day:"numeric", month:"long", year: "numeric"})
 }_
- 
+
 total (nuevos) casos en las últimas 24 horas
 
 *${countryName}*
