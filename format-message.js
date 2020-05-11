@@ -8,7 +8,7 @@ const spanish = require('localized-countries')('es')
 
 
 module.exports = function formatMessage(countryData, globalData, languageCode) {
-  if (countryData.country_code_2 == null || languageCode == "ENG") {
+  if (countryData.country_code_2 == null || languageCode == "ENG" || languageCode == null) {
     var countryName = isonames.find(
       item => countryData.country_code === item.alpha3
     ).country_name;
