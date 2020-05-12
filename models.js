@@ -8,6 +8,7 @@ class Statistics extends Model {}
 Statistics.init(
   {
     country_code: DataTypes.STRING,
+    country_code_2: DataTypes.STRING, // Iso-2 country code
     updated: DataTypes.DATE,
     new_cases: DataTypes.INTEGER,
     cum_cases: DataTypes.INTEGER,

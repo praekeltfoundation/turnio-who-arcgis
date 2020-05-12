@@ -5,7 +5,7 @@ const phone = require("phone");
 
 const TOKEN = process.env.TOKEN;
 
-const { retrieveCountryData, retrieveGlobalData } = require("./retrieve-data");
+const { retrieveCountryData, retrieveGlobalData, retrieveContactLanguage } = require("./retrieve-data");
 const formatMessage = require("./format-message");
 
 const client = axios.create({
@@ -52,7 +52,8 @@ async function sendCountryDataBasedOnPhoneNumber(req, res) {
 
   const countryData = await retrieveCountryData(countryCode);
   const globalData = await retrieveGlobalData(countryCode);
-  const msg = formatMessage(countryData, globalData);
+  const languageCode = await retrieveContactLanguage(client, user);
+  const msg = formatMessage(countryData, globalData, languageCode);
   inspect("formatted message:")(msg);
   return sendMessage(messageId, msg, user)
     .then(inspect("message response:"))
