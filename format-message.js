@@ -161,7 +161,7 @@ ${countryData.cum_cases} confirmados (${
 })
 ${countryData.cum_deaths} mortes (${countryData.new_deaths})
 
-*Munto*
+*Mundo*
 ${globalData.cum_cases} confirmados (${globalData.new_cases})
 ${globalData.cum_deaths} mortes (${globalData.new_deaths})
 

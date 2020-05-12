@@ -117,7 +117,7 @@ Número total de casos (novos) nas últimas 24 horas
 1845 confirmados (96)
 18 mortes (5)
 
-*Munto*
+*Mundo*
 70000 confirmados (3000)
 4500 mortes (200)
 
