@@ -52,7 +52,7 @@ async function sendCountryDataBasedOnPhoneNumber(req, res) {
 
   const countryData = await retrieveCountryData(countryCode);
   const globalData = await retrieveGlobalData(countryCode);
-  const languageCode = await retrieveContactLanguage(client, `+${user}`)
+  const languageCode = await retrieveContactLanguage(client, user);
   const msg = formatMessage(countryData, globalData, languageCode);
   inspect("formatted message:")(msg);
   return sendMessage(messageId, msg, user)
