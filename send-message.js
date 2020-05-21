@@ -4,12 +4,13 @@ const inspect = require("./inspect");
 const phone = require("phone");
 
 const TOKEN = process.env.TOKEN;
+const TURN_URL = process.env.TURN_URL;
 
 const { retrieveCountryData, retrieveGlobalData, retrieveContactLanguage } = require("./retrieve-data");
 const formatMessage = require("./format-message");
 
 const client = axios.create({
-  baseURL: "https://whatsapp.turn.io",
+  baseURL: TURN_URL,
   timeout: 300,
   headers: { Authorization: `Bearer ${TOKEN}` }
 });
