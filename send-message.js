@@ -3,19 +3,13 @@ const debug = require("debug")("turn");
 const inspect = require("./inspect");
 const phone = require("phone");
 
-const TOKEN = process.env.TOKEN;
+const TOKENS = JSON.parse(process.env.TOKENS);
 const TURN_URL = process.env.TURN_URL;
 
 const { retrieveCountryData, retrieveGlobalData, retrieveContactLanguage } = require("./retrieve-data");
 const formatMessage = require("./format-message");
 
-const client = axios.create({
-  baseURL: TURN_URL,
-  timeout: 300,
-  headers: { Authorization: `Bearer ${TOKEN}` }
-});
-
-function sendMessage(messageId, body, to) {
+function sendMessage(client, messageId, body, to) {
   debug(`sending message to ${to} in reply to ${messageId}`);
 
   return client
@@ -42,6 +36,17 @@ function sendMessage(messageId, body, to) {
 }
 
 async function sendCountryDataBasedOnPhoneNumber(req, res) {
+  var who_number = req.query.number;
+  if (who_number === undefined) {
+    who_number = "41798931892";
+  }
+  const token = TOKENS[who_number];
+  const client = axios.create({
+    baseURL: TURN_URL,
+    timeout: 300,
+    headers: { Authorization: `Bearer ${token}` }
+  });
+
   const user = req.body.contacts[0].wa_id;
   const messageId = req.body.messages[0].id;
   debug(`/stats called for ${user} with message id ${messageId}`);
@@ -56,7 +61,7 @@ async function sendCountryDataBasedOnPhoneNumber(req, res) {
   const languageCode = await retrieveContactLanguage(client, user);
   const msg = formatMessage(countryData, globalData, languageCode);
   inspect("formatted message:")(msg);
-  return sendMessage(messageId, msg, user)
+  return sendMessage(client, messageId, msg, user)
     .then(inspect("message response:"))
     .catch(err => {
       if (err.response) {
