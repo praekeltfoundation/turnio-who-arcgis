@@ -23,7 +23,7 @@ function retrieveCountryData(countryCode) {
       return obj;
     }
 
-    retrieveCountryStatsFromArcGis(countryCode)
+    return retrieveCountryStatsFromArcGis(countryCode)
       .then(data => {
         const features = data.features.sort(
           (a, b) => a.attributes.date_epicrv - b.attributes.date_epicrv
@@ -57,7 +57,7 @@ function retrieveGlobalData() {
       return obj;
     }
 
-    retrieveGlobalStatsFromArcGis()
+    return retrieveGlobalStatsFromArcGis()
       .then(data => {
         const features = data.features.sort(
           (a, b) => a.attributes.date_epicrv - b.attributes.date_epicrv
