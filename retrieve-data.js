@@ -48,7 +48,10 @@ function retrieveCountryData(countryCode) {
 function retrieveGlobalData() {
   return Statistics.findOne({
     where: {
-      country_code: "Global"
+      country_code: "Global",
+      [Op.not]: {
+        cum_cases: "null"
+      }
     },
     order: [["updatedAt", "DESC"]]
   }).then(obj => {
@@ -63,6 +66,9 @@ function retrieveGlobalData() {
           (a, b) => a.attributes.date_epicrv - b.attributes.date_epicrv
         );
         const latest = features.pop().attributes;
+        if (latest.CumCase === null && obj){
+          return obj;
+        }
         return Statistics.create({
           country_code: "Global",
           updated: latest.date_epicrv,
