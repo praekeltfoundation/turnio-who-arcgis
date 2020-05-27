@@ -50,7 +50,7 @@ function retrieveGlobalData() {
     where: {
       country_code: "Global",
       [Op.not]: {
-        cum_cases: "null"
+        cum_cases: null
       }
     },
     order: [["updatedAt", "DESC"]]
