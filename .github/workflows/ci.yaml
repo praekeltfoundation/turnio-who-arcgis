@@ -1,8 +1,9 @@
 name: Docker Image
 
 on:
-  tags:
-    - '*'
+  push:
+    tags:
+      - '*'
 
 jobs:
   build:
