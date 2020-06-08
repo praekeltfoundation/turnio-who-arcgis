@@ -7,7 +7,7 @@ const hindi = require('localized-countries')('hi')
 const spanish = require('localized-countries')('es')
 
 
-module.exports = function formatMessage(countryData, globalData, languageCode) {
+function formatMessage(countryData, globalData, languageCode) {
   var countryName = isonames.find(
     item => countryData.country_code === item.alpha3
   ).country_name;
@@ -272,3 +272,46 @@ https://www.who.int/emergencies/diseases/novel-coronavirus-2019/situation-report
 📌 Escriba 6 para noticias y prensa
 📌 Escriba 0 para volver al menú
 `;
+
+function formatNewsMessage(newsList, whoNumber) {
+  let msg = `*LATEST NEWS & PRESS*
+
+`;
+  if (newsList.items.length > 5) {
+    newsList.items.length = 5;
+  }
+  newsList.items.forEach(item => {
+    let description = item.contentSnippet;
+    if (description.length > 300) {
+      description = description.substring(0,description.indexOf(".", 100)+1)
+    }
+    msg += `• *${item.title}*
+${description}
+Read more here: ${item.link}
+
+`});
+
+  msg += `*More News*
+
+*Situation reports:* Situation reports provide the latest updates on the novel coronavirus outbreak. https://www.who.int/emergencies/diseases/novel-coronavirus-2019/situation-reports/
+
+*Rolling Updates:* Rolling updates on coronavirus disease (COVID-19) sourced from across WHO media.
+https://www.who.int/emergencies/diseases/novel-coronavirus-2019/events-as-they-happen
+
+*News articles:* All news releases, statements and notes for the media.
+https://www.who.int/emergencies/diseases/novel-coronavirus-2019/media-resources/news
+
+*Press briefings:* Coronavirus disease (COVID-2019) press briefings including videos, audio and transcripts.
+https://www.who.int/emergencies/diseases/novel-coronavirus-2019/media-resources/press-briefings
+
+⏩ *SHARE* this service with this link: http://wa.me/${whoNumber}?text=hi
+
+-----
+📌 Reply *0* for *MENU*`;
+return msg
+};
+
+module.exports = {
+  formatMessage,
+  formatNewsMessage
+};
