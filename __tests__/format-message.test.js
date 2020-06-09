@@ -1,4 +1,4 @@
-const formatMsg = require("../format-message");
+const { formatMessage, formatNewsMessage } = require("../format-message");
 
 const mock_date = new Date('May 20, 2020 11:20:18')
 jest
@@ -54,7 +54,7 @@ https://covid19.who.int/
 📌 Reply 6 for News & Press
 📌 Reply 0 for Menu
 `;
-    expect(formatMsg(mockStatistic, mockGlobal)).toEqual(formattedExample);
+    expect(formatMessage(mockStatistic, mockGlobal)).toEqual(formattedExample);
   });
   it("should enter the data in to the ITA template based on country_code and language", () => {
     const formattedExample = `*Ultimi casi* 🔢
@@ -76,7 +76,7 @@ Questa dashboard / mappa interattiva fornisce gli ultimi numeri globali e numeri
 
 *Per i numeri dei paesi, trova gli ultimi rapporti sulla situazione qui:* https://www.who.int/emergencies/diseases/novel-coronavirus-2019/situation-reports
 `;
-    expect(formatMsg(mockStatistic, mockGlobal, "ITA")).toEqual(formattedExample);
+    expect(formatMessage(mockStatistic, mockGlobal, "ITA")).toEqual(formattedExample);
   });
   it("should enter the data in to the FRA template based on country_code and language", () => {
     const formattedExample = `*Derniers chiffres* 🔢
@@ -104,7 +104,7 @@ https://covid19.who.int
 📌 Tapez 6 pour Actualités et presse
 📌 Tapez 0 pour le menu
 `;
-    expect(formatMsg(mockStatistic, mockGlobal, "FRA")).toEqual(formattedExample);
+    expect(formatMessage(mockStatistic, mockGlobal, "FRA")).toEqual(formattedExample);
   });
   it("should enter the data in to the POR template based on country_code and language", () => {
     const formattedExample = `*Números atualizados* 🔢
@@ -130,7 +130,7 @@ https://covid19.who.int (não disponível em português)
 📌 Responda 6 para Notícias
 📌 Responda 0 para voltar ao Menu
 `;
-    expect(formatMsg(mockStatistic, mockGlobal, "POR")).toEqual(formattedExample);
+    expect(formatMessage(mockStatistic, mockGlobal, "POR")).toEqual(formattedExample);
   });
   it("should enter the data in to the ARA template based on country_code and language", () => {
     const formattedExample = `*أحدث الأرقام* 🔢
@@ -159,7 +159,7 @@ https://bit.ly/2UCPW2g
  📌 أرسل 6 للأخبار والبيانات الصحفية
  📌 أرسل 0 للقائمة الرئيسية
 `;
-    expect(formatMsg(mockStatistic, mockGlobal, "ARA")).toEqual(formattedExample);
+    expect(formatMessage(mockStatistic, mockGlobal, "ARA")).toEqual(formattedExample);
   });
   it("should enter the data in to the HIN template based on country_code and language", () => {
     const formattedExample = `*मौजूदा संख्या* 🔢
@@ -186,7 +186,7 @@ https://www.who.int/emergencies/diseases/novel-coronavirus-2019/situation-report
 📌 6 से उत्तर दें समाचार और प्रेस के लिए 
 📌 0 से उत्तर दें प्रथम सूची के लिए
 `;
-    expect(formatMsg(mockStatistic, mockGlobal, "HIN")).toEqual(formattedExample);
+    expect(formatMessage(mockStatistic, mockGlobal, "HIN")).toEqual(formattedExample);
   });
   it("should enter the data in to the SPA template based on country_code and language", () => {
     const formattedExample = `*Últimas cifras* 🔢
@@ -216,6 +216,100 @@ https://www.who.int/emergencies/diseases/novel-coronavirus-2019/situation-report
 📌 Escriba 6 para noticias y prensa
 📌 Escriba 0 para volver al menú
 `;
-    expect(formatMsg(mockStatistic, mockGlobal, "SPA")).toEqual(formattedExample);
+    expect(formatMessage(mockStatistic, mockGlobal, "SPA")).toEqual(formattedExample);
+  });
+
+  it("should add the share link into the news template", () => {
+    const news_data = {
+      "items": [{
+        "title": "article 1",
+        "link": "some_link",
+        "contentSnippet": "some content",
+      }]
+    };
+    formatted_msg = formatNewsMessage(news_data, "23432434234")
+
+    expect(formatted_msg).toContain("http://wa.me/23432434234?text=hi");
+  });
+  it("should only add the latest 5 covid items into the news template", () => {
+    const news_data = {
+      "items": [{
+        "title": "article 1",
+        "link": "some_link",
+        "contentSnippet": "some covid content",
+      },{
+        "title": "article 2",
+        "link": "some_link",
+        "contentSnippet": "some other content",
+      },{
+        "title": "article 3",
+        "link": "some_link",
+        "contentSnippet": "some Covid content",
+      },{
+        "title": "article 4",
+        "link": "some_link",
+        "contentSnippet": "some COVID content",
+      },{
+        "title": "article 5",
+        "link": "some_link",
+        "contentSnippet": "some covid content",
+      },{
+        "title": "article 6",
+        "link": "some_link",
+        "contentSnippet": "some covid content",
+      },{
+        "title": "article 7",
+        "link": "some_link",
+        "contentSnippet": "some covid content",
+      }]
+    };
+    formatted_msg = formatNewsMessage(news_data, "23432434234")
+
+    expect(formatted_msg).toContain("*article 1*");
+    expect(formatted_msg).not.toContain("*article 2*");
+    expect(formatted_msg).toContain("*article 3*");
+    expect(formatted_msg).toContain("*article 4*");
+    expect(formatted_msg).toContain("*article 5*");
+    expect(formatted_msg).toContain("*article 6*");
+    expect(formatted_msg).not.toContain("*article 7*");
+  });
+  it("should truncate the snippet if it is longer than 300 characters", () => {
+    const news_data = {
+      "items": [{
+        "title": "article 1",
+        "link": "some_link",
+        "contentSnippet": "Lorem Ipsum is simply dummy text of the printing and typesetting industry COVID. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.",
+      }]
+    };
+    formatted_msg = formatNewsMessage(news_data, "23432434234")
+
+    expect(formatted_msg).toContain("scrambled it to make a type specimen book.");
+    expect(formatted_msg).not.toContain("It has survived not only five centuries,");
+  });
+  it("should truncate the snippet if it is longer than 300 without fullstop", () => {
+    const news_data = {
+      "items": [{
+        "title": "article 1",
+        "link": "some_link",
+        "contentSnippet": "Lorem Ipsum is simply dummy text used by the printing and typesetting industry COVID. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged",
+      }]
+    };
+    formatted_msg = formatNewsMessage(news_data, "23432434234")
+
+    expect(formatted_msg).toContain("dummy text ever sinc");
+    expect(formatted_msg).not.toContain("dummy text ever since");
+  });
+  it("should decode escaped html", () => {
+    const news_data = {
+      "items": [{
+        "title": "article&mdash;1",
+        "link": "some_link",
+        "contentSnippet": "Lorem&nbsp;Ipsum Covid",
+      }]
+    };
+    formatted_msg = formatNewsMessage(news_data, "23432434234")
+
+    expect(formatted_msg).toContain("article—1");
+    expect(formatted_msg).toContain("Lorem Ipsum");
   });
 });

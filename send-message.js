@@ -6,8 +6,8 @@ const phone = require("phone");
 const TOKENS = JSON.parse(process.env.TOKENS);
 const TURN_URL = process.env.TURN_URL;
 
-const { retrieveCountryData, retrieveGlobalData, retrieveContactLanguage } = require("./retrieve-data");
-const formatMessage = require("./format-message");
+const { retrieveCountryData, retrieveGlobalData, retrieveContactLanguage, retrieveLatestNews } = require("./retrieve-data");
+const { formatMessage, formatNewsMessage } = require("./format-message");
 
 function sendMessage(client, messageId, body, to) {
   debug(`sending message to ${to} in reply to ${messageId}`);
@@ -72,7 +72,38 @@ async function sendCountryDataBasedOnPhoneNumber(req, res) {
     });
 }
 
+async function sendLatestNews(req, res) {
+  var who_number = req.query.number;
+  if (who_number === undefined) {
+    who_number = "41798931892";
+  }
+  const token = TOKENS[who_number];
+  const client = axios.create({
+    baseURL: TURN_URL,
+    timeout: 300,
+    headers: { Authorization: `Bearer ${token}` }
+  });
+
+  const user = req.body.contacts[0].wa_id;
+  const messageId = req.body.messages[0].id;
+  debug(`/news called for ${user} with message id ${messageId}`);
+
+  const newsList = await retrieveLatestNews();
+  const msg = formatNewsMessage(newsList, who_number);
+  inspect("news message:")(msg);
+  return sendMessage(client, messageId, msg, user)
+    .then(inspect("message response:"))
+    .catch(err => {
+      if (err.response) {
+        inspect("error data")(err.response.data);
+        inspect("error status")(err.response.status);
+        inspect("error headers")(err.response.headers);
+      }
+    });
+}
+
 module.exports = {
   sendCountryDataBasedOnPhoneNumber,
-  sendMessage
+  sendMessage,
+  sendLatestNews
 };

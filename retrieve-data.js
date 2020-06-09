@@ -1,6 +1,8 @@
 const axios = require("axios").default;
 const debug = require("debug")("turn");
 const { Op } = require("sequelize");
+const Parser = require('rss-parser');
+const parser = new Parser();
 
 const { Statistics } = require("./models");
 
@@ -130,12 +132,20 @@ function retrieveContactLanguage(client, msisdn) {
           "Accept": "application/vnd.v1+json"
         },
       }).then(res => res.data.fields.language);
-    }
+}
+
+const rssFeedUrl = "https://www.who.int/rss-feeds/news-english.xml";
+
+async function retrieveLatestNews() {
+  debug("retrieving from RSS");
+  return feed = await parser.parseURL(rssFeedUrl)
+}
 
 module.exports = {
   retrieveCountryData: retrieveCountryData,
   retrieveGlobalData: retrieveGlobalData,
   retrieveCountryStatsFromArcGis: retrieveCountryStatsFromArcGis,
   shouldNotHaveToUpdate: shouldNotHaveToUpdate,
-  retrieveContactLanguage: retrieveContactLanguage
+  retrieveContactLanguage: retrieveContactLanguage,
+  retrieveLatestNews: retrieveLatestNews
 };

@@ -6,8 +6,10 @@ const arabic = require('localized-countries')('ar')
 const hindi = require('localized-countries')('hi')
 const spanish = require('localized-countries')('es')
 
+const Entities = require('html-entities').AllHtmlEntities;
+const entities = new Entities();
 
-module.exports = function formatMessage(countryData, globalData, languageCode) {
+function formatMessage(countryData, globalData, languageCode) {
   var countryName = isonames.find(
     item => countryData.country_code === item.alpha3
   ).country_name;
@@ -272,3 +274,58 @@ https://www.who.int/emergencies/diseases/novel-coronavirus-2019/situation-report
 📌 Escriba 6 para noticias y prensa
 📌 Escriba 0 para volver al menú
 `;
+
+function formatNewsMessage(newsList, whoNumber) {
+  let msg = `*LATEST NEWS & PRESS*
+
+`;
+  let count = 0
+  for (let i = 0; i < newsList.items.length; i++) {
+    item = newsList.items[i]
+    let description = entities.decode(item.contentSnippet);
+    if (!(description.includes('covid') || description.includes('Covid') || description.includes('COVID'))) {
+      continue;
+    }
+
+    if (description.length > 300) {
+      end_index = description.indexOf(".", 100);
+      if (end_index < 0) {
+        end_index = 150;
+      }
+      description = description.substring(0, end_index+1);
+    }
+    msg += `• *${entities.decode(item.title)}*
+${description}
+Read more here: ${entities.decode(item.link)}
+
+`
+    count += 1;
+    if (count >= 5) {
+      break;
+    }
+  }
+
+  msg += `*More News*
+
+*Situation reports:* Situation reports provide the latest updates on the novel coronavirus outbreak. https://www.who.int/emergencies/diseases/novel-coronavirus-2019/situation-reports/
+
+*Rolling Updates:* Rolling updates on coronavirus disease (COVID-19) sourced from across WHO media.
+https://www.who.int/emergencies/diseases/novel-coronavirus-2019/events-as-they-happen
+
+*News articles:* All news releases, statements and notes for the media.
+https://www.who.int/emergencies/diseases/novel-coronavirus-2019/media-resources/news
+
+*Press briefings:* Coronavirus disease (COVID-2019) press briefings including videos, audio and transcripts.
+https://www.who.int/emergencies/diseases/novel-coronavirus-2019/media-resources/press-briefings
+
+⏩ *SHARE* this service with this link: http://wa.me/${whoNumber}?text=hi
+
+-----
+📌 Reply *0* for *MENU*`;
+return msg
+};
+
+module.exports = {
+  formatMessage,
+  formatNewsMessage
+};
