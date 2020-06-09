@@ -6,6 +6,8 @@ const arabic = require('localized-countries')('ar')
 const hindi = require('localized-countries')('hi')
 const spanish = require('localized-countries')('es')
 
+const Entities = require('html-entities').AllHtmlEntities;
+const entities = new Entities();
 
 function formatMessage(countryData, globalData, languageCode) {
   var countryName = isonames.find(
@@ -280,7 +282,7 @@ function formatNewsMessage(newsList, whoNumber) {
   let count = 0
   for (let i = 0; i < newsList.items.length; i++) {
     item = newsList.items[i]
-    let description = item.contentSnippet;
+    let description = entities.decode(item.contentSnippet);
     if (!(description.includes('covid') || description.includes('Covid') || description.includes('COVID'))) {
       continue;
     }
@@ -288,9 +290,9 @@ function formatNewsMessage(newsList, whoNumber) {
     if (description.length > 300) {
       description = description.substring(0,description.indexOf(".", 100)+1)
     }
-    msg += `• *${item.title}*
+    msg += `• *${entities.decode(item.title)}*
 ${description}
-Read more here: ${item.link}
+Read more here: ${entities.decode(item.link)}
 
 `
     count += 1;
