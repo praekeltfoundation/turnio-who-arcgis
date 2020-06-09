@@ -288,7 +288,11 @@ function formatNewsMessage(newsList, whoNumber) {
     }
 
     if (description.length > 300) {
-      description = description.substring(0,description.indexOf(".", 100)+1)
+      end_index = description.indexOf(".", 100);
+      if (end_index < 0) {
+        end_index = 150;
+      }
+      description = description.substring(0, end_index+1);
     }
     msg += `• *${entities.decode(item.title)}*
 ${description}
