@@ -299,4 +299,17 @@ https://www.who.int/emergencies/diseases/novel-coronavirus-2019/situation-report
     expect(formatted_msg).toContain("dummy text ever sinc");
     expect(formatted_msg).not.toContain("dummy text ever since");
   });
+  it("should decode escaped html", () => {
+    const news_data = {
+      "items": [{
+        "title": "article&mdash;1",
+        "link": "some_link",
+        "contentSnippet": "Lorem&nbsp;Ipsum Covid",
+      }]
+    };
+    formatted_msg = formatNewsMessage(news_data, "23432434234")
+
+    expect(formatted_msg).toContain("article—1");
+    expect(formatted_msg).toContain("Lorem Ipsum");
+  });
 });
