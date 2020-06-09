@@ -277,11 +277,14 @@ function formatNewsMessage(newsList, whoNumber) {
   let msg = `*LATEST NEWS & PRESS*
 
 `;
-  if (newsList.items.length > 5) {
-    newsList.items.length = 5;
-  }
-  newsList.items.forEach(item => {
+  let count = 0
+  for (let i = 0; i < newsList.items.length; i++) {
+    item = newsList.items[i]
     let description = item.contentSnippet;
+    if (!(description.includes('covid') || description.includes('Covid') || description.includes('COVID'))) {
+      continue;
+    }
+
     if (description.length > 300) {
       description = description.substring(0,description.indexOf(".", 100)+1)
     }
@@ -289,7 +292,12 @@ function formatNewsMessage(newsList, whoNumber) {
 ${description}
 Read more here: ${item.link}
 
-`});
+`
+    count += 1;
+    if (count >= 5) {
+      break;
+    }
+  }
 
   msg += `*More News*
 

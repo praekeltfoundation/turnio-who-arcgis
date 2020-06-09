@@ -231,49 +231,54 @@ https://www.who.int/emergencies/diseases/novel-coronavirus-2019/situation-report
 
     expect(formatted_msg).toContain("http://wa.me/23432434234?text=hi");
   });
-  it("should only add the latest 5 news items into the news template", () => {
+  it("should only add the latest 5 covid items into the news template", () => {
     const news_data = {
       "items": [{
         "title": "article 1",
         "link": "some_link",
-        "contentSnippet": "some content",
+        "contentSnippet": "some covid content",
       },{
         "title": "article 2",
         "link": "some_link",
-        "contentSnippet": "some content",
+        "contentSnippet": "some other content",
       },{
         "title": "article 3",
         "link": "some_link",
-        "contentSnippet": "some content",
+        "contentSnippet": "some Covid content",
       },{
         "title": "article 4",
         "link": "some_link",
-        "contentSnippet": "some content",
+        "contentSnippet": "some COVID content",
       },{
         "title": "article 5",
         "link": "some_link",
-        "contentSnippet": "some content",
+        "contentSnippet": "some covid content",
       },{
         "title": "article 6",
         "link": "some_link",
-        "contentSnippet": "some content",
+        "contentSnippet": "some covid content",
+      },{
+        "title": "article 7",
+        "link": "some_link",
+        "contentSnippet": "some covid content",
       }]
     };
     formatted_msg = formatNewsMessage(news_data, "23432434234")
 
     expect(formatted_msg).toContain("*article 1*");
-    expect(formatted_msg).toContain("*article 2*");
+    expect(formatted_msg).not.toContain("*article 2*");
     expect(formatted_msg).toContain("*article 3*");
     expect(formatted_msg).toContain("*article 4*");
     expect(formatted_msg).toContain("*article 5*");
-    expect(formatted_msg).not.toContain("*article 6*");
+    expect(formatted_msg).toContain("*article 6*");
+    expect(formatted_msg).not.toContain("*article 7*");
   });
   it("should truncate the snippet if it is longer than 300 characters", () => {
     const news_data = {
       "items": [{
         "title": "article 1",
         "link": "some_link",
-        "contentSnippet": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.",
+        "contentSnippet": "Lorem Ipsum is simply dummy text of the printing and typesetting industry COVID. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.",
       }]
     };
     formatted_msg = formatNewsMessage(news_data, "23432434234")
