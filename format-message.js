@@ -294,7 +294,7 @@ function formatNewsMessage(newsList, whoNumber) {
       }
       description = description.substring(0, end_index+1);
     }
-    msg += `• *${entities.decode(item.title)}*
+    msg += `*${entities.decode(item.title)}*
 ${description}
 Read more here: ${entities.decode(item.link)}
 
