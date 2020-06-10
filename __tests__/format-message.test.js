@@ -225,6 +225,7 @@ https://www.who.int/emergencies/diseases/novel-coronavirus-2019/situation-report
         "title": "article 1",
         "link": "some_link",
         "contentSnippet": "some content",
+        "pubDate": "Tue, 09 Jun 2020 14:53:34 Z"
       }]
     };
     formatted_msg = formatNewsMessage(news_data, "23432434234")
@@ -237,30 +238,37 @@ https://www.who.int/emergencies/diseases/novel-coronavirus-2019/situation-report
         "title": "article 1",
         "link": "some_link",
         "contentSnippet": "some covid content",
+        "pubDate": "Tue, 09 Jun 2020 14:53:34 Z"
       },{
         "title": "article 2",
         "link": "some_link",
         "contentSnippet": "some other content",
+        "pubDate": "Tue, 09 Jun 2020 14:53:34 Z"
       },{
         "title": "article 3",
         "link": "some_link",
         "contentSnippet": "some Covid content",
+        "pubDate": "Tue, 09 Jun 2020 14:53:34 Z"
       },{
         "title": "article 4",
         "link": "some_link",
         "contentSnippet": "some COVID content",
+        "pubDate": "Tue, 09 Jun 2020 14:53:34 Z"
       },{
         "title": "article 5",
         "link": "some_link",
         "contentSnippet": "some covid content",
+        "pubDate": "Tue, 09 Jun 2020 14:53:34 Z"
       },{
         "title": "article 6",
         "link": "some_link",
         "contentSnippet": "some covid content",
+        "pubDate": "Tue, 09 Jun 2020 14:53:34 Z"
       },{
         "title": "article 7",
         "link": "some_link",
         "contentSnippet": "some covid content",
+        "pubDate": "Tue, 09 Jun 2020 14:53:34 Z"
       }]
     };
     formatted_msg = formatNewsMessage(news_data, "23432434234")
@@ -279,6 +287,7 @@ https://www.who.int/emergencies/diseases/novel-coronavirus-2019/situation-report
         "title": "article 1",
         "link": "some_link",
         "contentSnippet": "Lorem Ipsum is simply dummy text of the printing and typesetting industry COVID. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.",
+        "pubDate": "Tue, 09 Jun 2020 14:53:34 Z"
       }]
     };
     formatted_msg = formatNewsMessage(news_data, "23432434234")
@@ -292,6 +301,7 @@ https://www.who.int/emergencies/diseases/novel-coronavirus-2019/situation-report
         "title": "article 1",
         "link": "some_link",
         "contentSnippet": "Lorem Ipsum is simply dummy text used by the printing and typesetting industry COVID. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged",
+        "pubDate": "Tue, 09 Jun 2020 14:53:34 Z"
       }]
     };
     formatted_msg = formatNewsMessage(news_data, "23432434234")
@@ -305,11 +315,26 @@ https://www.who.int/emergencies/diseases/novel-coronavirus-2019/situation-report
         "title": "article&mdash;1",
         "link": "some_link",
         "contentSnippet": "Lorem&nbsp;Ipsum Covid",
+        "pubDate": "Tue, 09 Jun 2020 14:53:34 Z"
       }]
     };
     formatted_msg = formatNewsMessage(news_data, "23432434234")
 
     expect(formatted_msg).toContain("article—1");
     expect(formatted_msg).toContain("Lorem Ipsum");
+  });
+  it("should remove the day and replace the 'Z' with 'UTC'", () => {
+    const news_data = {
+      "items": [{
+        "title": "article 1",
+        "link": "some_link",
+        "contentSnippet": "some Covid content",
+        "pubDate": "Tue, 09 Jun 2020 14:53:34 Z"
+      }]
+    };
+    formatted_msg = formatNewsMessage(news_data, "23432434234")
+
+    expect(formatted_msg).toContain("_09 Jun 2020 14:53:34 UTC_");
+    expect(formatted_msg).not.toContain("Tue,");
   });
 });

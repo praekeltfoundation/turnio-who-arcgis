@@ -294,7 +294,9 @@ function formatNewsMessage(newsList, whoNumber) {
       }
       description = description.substring(0, end_index+1);
     }
+    date = item.pubDate.substring(5).replace("Z", "UTC")
     msg += `*${entities.decode(item.title)}*
+_${date}_
 ${description}
 Read more here: ${entities.decode(item.link)}
 
