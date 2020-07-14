@@ -1,4 +1,4 @@
-const { formatMessage, formatNewsMessage } = require("../format-message");
+const { formatMessage, formatNewsMessage, formatHomepageMessages } = require("../format-message");
 
 const mock_date = new Date('May 20, 2020 11:20:18')
 jest
@@ -336,5 +336,62 @@ https://www.who.int/emergencies/diseases/novel-coronavirus-2019/situation-report
 
     expect(formatted_msg).toContain("_09 Jun 2020 14:53:34 UTC_");
     expect(formatted_msg).not.toContain("Tue,");
+  });
+  it("should format the cases summary message", () => {
+    const news_data = {
+      "items": [{
+        "title": "article 1",
+        "link": "some_link",
+        "contentSnippet": "some Covid content",
+        "pubDate": "Tue, 09 Jun 2020 14:53:34 Z"
+      }]
+    };
+    const formattedExample = `*World Health Organization*
+COVID-19 🦠 Global Response
+_Wednesday, 20 May 2020 11:20:18_
+-------------------------------
+[🇿🇦] *South Africa Cases*
+1845 confirmed cases (96▲)
+18 deaths (5▲)
+-------------------------------
+💡Reply *LATEST* for detailed case report`;
+        expect(formatHomepageMessages(mockStatistic, news_data)[0]).toEqual(formattedExample);
+  });
+  it("should format the news summary message with 2 covid news items", () => {
+    const news_data = {
+      "items": [{
+        "title": "article 1",
+        "link": "https://some_link",
+        "contentSnippet": "some covid content",
+        "pubDate": "Tue, 09 Jun 2020 14:53:34 Z"
+      },{
+        "title": "article 2",
+        "link": "https://some_link",
+        "contentSnippet": "some other content",
+        "pubDate": "Tue, 09 Jun 2020 14:53:34 Z"
+      },{
+        "title": "article 3",
+        "link": "http://www.some_link",
+        "contentSnippet": "some Covid content",
+        "pubDate": "Tue, 09 Jun 2020 14:53:34 Z"
+      },{
+        "title": "article 4",
+        "link": "some_link",
+        "contentSnippet": "some COVID content",
+        "pubDate": "Tue, 09 Jun 2020 14:53:34 Z"
+      }]
+    };
+    const formattedExample = `[📰] *Newsfeed*
+
+_09 Jun 2020 14:53:34 UTC_
+*article 1*
+[some_link]
+
+_09 Jun 2020 14:53:34 UTC_
+*article 3*
+[www.some_link]
+
+💡Reply *NEWS* to read more`;
+        expect(formatHomepageMessages(mockStatistic, news_data)[1]).toEqual(formattedExample);
   });
 });
