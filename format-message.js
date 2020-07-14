@@ -5,6 +5,7 @@ const português = require('localized-countries')('pt')
 const arabic = require('localized-countries')('ar')
 const hindi = require('localized-countries')('hi')
 const spanish = require('localized-countries')('es')
+const emojiFlags = require('emoji-flags');
 
 const Entities = require('html-entities').AllHtmlEntities;
 const entities = new Entities();
@@ -327,7 +328,63 @@ https://www.who.int/emergencies/diseases/novel-coronavirus-2019/media-resources/
 return msg
 };
 
+function formatHomepageMessages(countryData, newsList) {
+  // The translations were writting for CET so we use that
+  const curr_date = new Date((new Date().getTime())+1 * 60 * 60 * 1000) ;
+
+  var countryName = isonames.find(
+    item => countryData.country_code === item.alpha3
+  ).country_name;
+
+  let countryEmoji=``
+  if (countryData.country_code_2) {
+    countryEmoji += `[${emojiFlags.countryCode(countryData.country_code_2).emoji}] `;
+  }
+
+  let cases_msg = `*World Health Organization*
+COVID-19 🦠 Global Response
+_${curr_date.toLocaleDateString(undefined, {
+  weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+})} ${curr_date.toLocaleTimeString(undefined)}_
+-------------------------------
+${countryEmoji}*${countryName} Cases*
+${countryData.cum_cases} confirmed cases (${
+  countryData.new_cases
+}▲)
+${countryData.cum_deaths} deaths (${countryData.new_deaths}▲)
+-------------------------------
+💡Reply *LATEST* for detailed case report`;
+
+  let news_msg = `[📰] *Newsfeed*
+
+`;
+
+  let count = 0
+  for (let i = 0; i < newsList.items.length; i++) {
+    item = newsList.items[i]
+    let description = entities.decode(item.contentSnippet);
+    if (!(description.includes('covid') || description.includes('Covid') || description.includes('COVID'))) {
+      continue;
+    }
+    date = item.pubDate.substring(5).replace("Z", "UTC");
+    news_msg += `_${date}_
+*${entities.decode(item.title)}*
+[${entities.decode(item.link).replace('https://', '').replace('http://', '')}]
+
+`;
+    count += 1;
+    if (count >= 2) {
+      break;
+    }
+  }
+
+  news_msg += `💡Reply *NEWS* to read more`;
+
+return [cases_msg, news_msg];
+};
+
 module.exports = {
   formatMessage,
-  formatNewsMessage
+  formatNewsMessage,
+  formatHomepageMessages
 };
