@@ -130,17 +130,18 @@ async function sendHomepage(req, res) {
   inspect("homepage stats message:")(msg1);
   inspect("homepage news message:")(msg2);
 
-  sendMessage(client, messageId, msg1, user)
-    .then(inspect("message response:"))
-    .catch(err => {
-      if (err.response) {
-        inspect("error data")(err.response.data);
-        inspect("error status")(err.response.status);
-        inspect("error headers")(err.response.headers);
-      }
-    });
-  return sendMessage(client, messageId, msg2, user)
-    .then(inspect("message response:"))
+  return sendMessage(client, messageId, msg1, user)
+    .then(
+      sendMessage(client, messageId, msg2, user)
+        .then(inspect("message response:"))
+        .catch(err => {
+          if (err.response) {
+            inspect("error data")(err.response.data);
+            inspect("error status")(err.response.status);
+            inspect("error headers")(err.response.headers);
+          }
+        })
+    )
     .catch(err => {
       if (err.response) {
         inspect("error data")(err.response.data);
