@@ -8,7 +8,8 @@ This service requires the following ENV variables:
 
 >
 
-    TOKEN=<your-turn-token>
+    TOKENS=<stringified-json-object-with-Turn-numbers-as-keys-and-Turn-auth-tokens-as-values>
+    TURN_URL=<url-for-Turn-instance>
 
 It can be configured with the following optional ENV variables:
 
