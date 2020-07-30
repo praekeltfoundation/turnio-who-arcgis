@@ -329,8 +329,7 @@ return msg
 };
 
 function formatHomepageMessages(countryData, newsList) {
-  // The translations were writting for CET so we use that
-  const curr_date = new Date((new Date().getTime())+1 * 60 * 60 * 1000) ;
+  const curr_date = new Date(new Date().getTime());
 
   var countryName = isonames.find(
     item => countryData.country_code === item.alpha3
@@ -341,19 +340,17 @@ function formatHomepageMessages(countryData, newsList) {
     countryEmoji += `[${emojiFlags.countryCode(countryData.country_code_2).emoji}] `;
   }
 
-  let cases_msg = `*World Health Organization*
-COVID-19 🦠 Global Response
+  let cases_msg = `${countryEmoji}*${countryName} Cases*
+
 _${curr_date.toLocaleDateString(undefined, {
   weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-})} ${curr_date.toLocaleTimeString(undefined)}_
--------------------------------
-${countryEmoji}*${countryName} Cases*
+})} ${curr_date.toLocaleTimeString(undefined)} UTC_
 ${countryData.cum_cases} confirmed cases (${
   countryData.new_cases
 }▲)
 ${countryData.cum_deaths} deaths (${countryData.new_deaths}▲)
--------------------------------
-💡Reply *LATEST* for detailed case report`;
+
+💡_Reply *LATEST* for detailed case report_`;
 
   let news_msg = `[📰] *Newsfeed*
 
@@ -373,12 +370,12 @@ ${countryData.cum_deaths} deaths (${countryData.new_deaths}▲)
 
 `;
     count += 1;
-    if (count >= 2) {
+    if (count >= 1) {
       break;
     }
   }
 
-  news_msg += `💡Reply *NEWS* to read more`;
+  news_msg += `💡_Reply *NEWS* to read more_`;
 
 return [cases_msg, news_msg];
 };

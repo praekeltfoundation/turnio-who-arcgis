@@ -346,18 +346,14 @@ https://www.who.int/emergencies/diseases/novel-coronavirus-2019/situation-report
         "pubDate": "Tue, 09 Jun 2020 14:53:34 Z"
       }]
     };
-    const formattedExample = `*World Health Organization*
-COVID-19 🦠 Global Response
-_Wednesday, 20 May 2020 11:20:18_
--------------------------------
-[🇿🇦] *South Africa Cases*
+    const formattedExample = `[🇿🇦] *South Africa Cases*
+_Wednesday, 20 May 2020 10:20:18 UTC_
 1845 confirmed cases (96▲)
 18 deaths (5▲)
--------------------------------
-💡Reply *LATEST* for detailed case report`;
+💡_Reply *LATEST* for detailed case report_`;
         expect(formatHomepageMessages(mockStatistic, news_data)[0]).toEqual(formattedExample);
   });
-  it("should format the news summary message with 2 covid news items", () => {
+  it("should format the news summary message with 1 covid news items", () => {
     const news_data = {
       "items": [{
         "title": "article 1",
@@ -387,11 +383,7 @@ _09 Jun 2020 14:53:34 UTC_
 *article 1*
 [some_link]
 
-_09 Jun 2020 14:53:34 UTC_
-*article 3*
-[www.some_link]
-
-💡Reply *NEWS* to read more`;
+💡_Reply *NEWS* to read more_`;
         expect(formatHomepageMessages(mockStatistic, news_data)[1]).toEqual(formattedExample);
   });
 });
