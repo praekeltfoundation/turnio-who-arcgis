@@ -350,7 +350,7 @@ ${countryData.cum_cases} confirmed cases (${
 }▲)
 ${countryData.cum_deaths} deaths (${countryData.new_deaths}▲)
 
-💡_Reply *LATEST* for detailed case report_`;
+💡 _Reply *LATEST* for detailed case report_`;
 
   let news_msg = `[📰] *Newsfeed*
 
@@ -375,7 +375,7 @@ ${countryData.cum_deaths} deaths (${countryData.new_deaths}▲)
     }
   }
 
-  news_msg += `💡_Reply *NEWS* to read more_`;
+  news_msg += `💡 _Reply *NEWS* to read more_`;
 
 return [cases_msg, news_msg];
 };
