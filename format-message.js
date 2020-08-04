@@ -290,10 +290,7 @@ function formatNewsMessage(newsList, whoNumber) {
 
     if (description.length > 300) {
       end_index = description.indexOf(".", 100);
-      if (end_index < 0) {
-        end_index = 150;
-      }
-      if (end_index > 300) {
+      if (end_index < 0 || end_index > 300) {
         end_index = description.indexOf(" ", 250);
       }
       description = description.substring(0, end_index+1);
