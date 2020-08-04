@@ -293,6 +293,9 @@ function formatNewsMessage(newsList, whoNumber) {
       if (end_index < 0) {
         end_index = 150;
       }
+      if (end_index > 300) {
+        end_index = description.indexOf(" ", 250);
+      }
       description = description.substring(0, end_index+1);
     }
     date = item.pubDate.substring(5).replace("Z", "UTC")
