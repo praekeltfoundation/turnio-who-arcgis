@@ -350,7 +350,7 @@ https://www.who.int/emergencies/diseases/novel-coronavirus-2019/situation-report
 _Wednesday, 20 May 2020 10:20:18 UTC_
 1845 confirmed cases (96▲)
 18 deaths (5▲)
-💡_Reply *LATEST* for detailed case report_`;
+💡 _Reply *LATEST* for detailed case report_`;
         expect(formatHomepageMessages(mockStatistic, news_data)[0]).toEqual(formattedExample);
   });
   it("should format the news summary message with 1 covid news items", () => {
@@ -383,7 +383,7 @@ _09 Jun 2020 14:53:34 UTC_
 *article 1*
 [some_link]
 
-💡_Reply *NEWS* to read more_`;
+💡 _Reply *NEWS* to read more_`;
         expect(formatHomepageMessages(mockStatistic, news_data)[1]).toEqual(formattedExample);
   });
 });
