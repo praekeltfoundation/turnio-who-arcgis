@@ -107,19 +107,17 @@ const featureServerUrl =
 
 function retrieveCountryStatsFromArcGis(countryCode) {
   debug("retrieving from ArcGIS");
-  return axios({
-    method: "get",
-    url: `${featureServerUrl}/${query(countryCode)}`
-  }).then(res => res.data);
+  return axios.get(
+    `${featureServerUrl}/${query(countryCode)}`
+  ).then(res => res.data);
 }
 
 function retrieveGlobalStatsFromArcGis() {
   const usFormatDate = new Intl.DateTimeFormat("en-US").format(new Date());
   debug("retrieving from ArcGIS");
-  return axios({
-    method: "get",
-    url: `${featureServerUrl}/${globalStats(usFormatDate)}`
-  }).then(res => res.data);
+  return axios.get(
+    `${featureServerUrl}/${globalStats(usFormatDate)}`
+  ).then(res => res.data);
 }
 
 function retrieveContactLanguage(client, msisdn) {
@@ -145,6 +143,7 @@ module.exports = {
   retrieveCountryData: retrieveCountryData,
   retrieveGlobalData: retrieveGlobalData,
   retrieveCountryStatsFromArcGis: retrieveCountryStatsFromArcGis,
+  retrieveGlobalStatsFromArcGis: retrieveGlobalStatsFromArcGis,
   shouldNotHaveToUpdate: shouldNotHaveToUpdate,
   retrieveContactLanguage: retrieveContactLanguage,
   retrieveLatestNews: retrieveLatestNews
