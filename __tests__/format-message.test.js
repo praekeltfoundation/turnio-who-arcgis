@@ -306,8 +306,22 @@ https://www.who.int/emergencies/diseases/novel-coronavirus-2019/situation-report
     };
     formatted_msg = formatNewsMessage(news_data, "23432434234")
 
-    expect(formatted_msg).toContain("dummy text ever sinc");
-    expect(formatted_msg).not.toContain("dummy text ever since");
+    expect(formatted_msg).toContain("it to make a type specimen");
+    expect(formatted_msg).not.toContain("book It has survived not");
+  });
+  it("should truncate the snippet if it has a fullstop after the 300 character mark", () => {
+    const news_data = {
+      "items": [{
+        "title": "article 1",
+        "link": "some_link",
+        "contentSnippet": "Lorem Ipsum is simply dummy text used by the printing and typesetting industry COVID Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially. unchanged",
+        "pubDate": "Tue, 09 Jun 2020 14:53:34 Z"
+      }]
+    };
+    formatted_msg = formatNewsMessage(news_data, "23432434234")
+
+    expect(formatted_msg).toContain("it to make a type specimen");
+    expect(formatted_msg).not.toContain("book It has survived not");
   });
   it("should decode escaped html", () => {
     const news_data = {
