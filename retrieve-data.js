@@ -130,7 +130,7 @@ const query = country =>
   `query?where=ISO_3_CODE+%3D+'${country}'&returnGeometry=false&outFields=NewCase,CumCase,NewDeath,CumDeath,date_epicrv,ISO_2_CODE&f=json`;
 
 const featureServerUrl =
-  "https://services.arcgis.com/5T5nSi527N4F7luB/arcgis/rest/services/COVID19_hist_cases_adm0_v5_view/FeatureServer/0";
+  "https://services.arcgis.com/5T5nSi527N4F7luB/arcgis/rest/services/COVID_19_Historic_cases_by_country_pt_v7_view/FeatureServer/0";
 
 function retrieveCountryStatsFromArcGis(countryCode) {
   debug("retrieving from ArcGIS");

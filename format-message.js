@@ -15,8 +15,8 @@ function formatMessage(countryData, globalData, languageCode) {
     item => countryData.country_code === item.alpha3
   ).country_name;
 
-  // The translations were writting for CET so we use that
-  const date = new Date((new Date().getTime())+1 * 60 * 60 * 1000) ;
+  // The translations were writting for CET (UTC+1) so we use that
+  const date = new Date(countryData.updated + 1 * 60 * 60 * 1000) ;
 
   switch (languageCode) {
     case "ITA":
