@@ -51,7 +51,6 @@ https://covid19.who.int/
 
 *For country numbers, find the latest situation reports here:* https://www.who.int/emergencies/diseases/novel-coronavirus-2019/situation-reports
 
-📌 Reply 6 for News & Press
 📌 Reply 0 for Menu
 `;
     expect(formatMessage(mockStatistic, mockGlobal)).toEqual(formattedExample);
@@ -101,7 +100,6 @@ https://covid19.who.int
 
 *Pour les chiffres de chaque pays, les derniers rapports de situation se trouvent ici:* https://www.who.int/emergencies/diseases/novel-coronavirus-2019/situation-reports/
 
-📌 Tapez 6 pour Actualités et presse
 📌 Tapez 0 pour le menu
 `;
     expect(formatMessage(mockStatistic, mockGlobal, "FRA")).toEqual(formattedExample);
@@ -127,7 +125,6 @@ https://covid19.who.int (não disponível em português)
 
 *Para obter os dados por país, acesse os relatórios de situação mais recentes aqui:* https://www.who.int/emergencies/diseases/novel-coronavirus-2019/situation-reports/ (disponível somente em inglês)
 
-📌 Responda 6 para Notícias
 📌 Responda 0 para voltar ao Menu
 `;
     expect(formatMessage(mockStatistic, mockGlobal, "POR")).toEqual(formattedExample);
@@ -156,7 +153,6 @@ https://bit.ly/2UCPW2g
 
 *وللاطلاع على أحدث تقارير حالة لدول إقليم شرق المتوسط باللغة العربية قم بزيارة الرابط التالي:* http://www.emro.who.int/ar/health-topics/corona-virus/situation-reports.html
 
- 📌 أرسل 6 للأخبار والبيانات الصحفية
  📌 أرسل 0 للقائمة الرئيسية
 `;
     expect(formatMessage(mockStatistic, mockGlobal, "ARA")).toEqual(formattedExample);
@@ -183,7 +179,6 @@ https://covid19.who.int
 *देश में संक्रमित व्यक्तियों की मौजूदा संख्या यहाँ पर मिलेगी |*
 https://www.who.int/emergencies/diseases/novel-coronavirus-2019/situation-reports/
 
-📌 6 से उत्तर दें समाचार और प्रेस के लिए 
 📌 0 से उत्तर दें प्रथम सूची के लिए
 `;
     expect(formatMessage(mockStatistic, mockGlobal, "HIN")).toEqual(formattedExample);
@@ -213,7 +208,6 @@ https://who.maps.arcgis.com/apps/webappviewer/index.html?id=2203b04c3a5f486685a1
 *Para cifras por país, visite los últimos informes aquí:*
 https://www.who.int/emergencies/diseases/novel-coronavirus-2019/situation-reports/
 
-📌 Escriba 6 para noticias y prensa
 📌 Escriba 0 para volver al menú
 `;
     expect(formatMessage(mockStatistic, mockGlobal, "SPA")).toEqual(formattedExample);
