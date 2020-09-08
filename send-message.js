@@ -144,6 +144,10 @@ async function sendHomepage(req, res) {
   if (who_number === undefined) {
     who_number = "41798931892";
   }
+  var delay = parseInt(req.query.delay, 10);
+  if (delay === undefined || isNaN(delay) || delay > 20000) {
+    delay = 2000;
+  }
 
   const user = req.body.contacts[0].wa_id;
   const messageId = req.body.messages[0].id;
@@ -166,7 +170,7 @@ async function sendHomepage(req, res) {
     "msgs":msgs,
     "user":user,
     "number":who_number,
-    "delay": 5000
+    "delay": delay
   })
 }
 
