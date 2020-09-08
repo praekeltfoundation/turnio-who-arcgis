@@ -7,6 +7,11 @@ const TOKENS = JSON.parse(process.env.TOKENS);
 const TURN_URL = process.env.TURN_URL;
 const AMQP_URL = process.env.AMQP_URL;
 
+let AMQP_PREFETCH_COUNT = process.env.AMQP_PREFETCH_COUNT;
+if (AMQP_PREFETCH_COUNT === undefined) {
+    AMQP_PREFETCH_COUNT = 10
+  }
+
 function sendBackgroundedMsgsWithDelay(data) {
   msgId = data.messageId
   msgs = data.msgs
@@ -30,6 +35,7 @@ amqp.connect(AMQP_URL, function(err, conn) {
   conn.createChannel(function(err, ch) {
     const q = 'background';
     ch.assertQueue(q, { durable: true });
+    ch.prefetch(AMQP_PREFETCH_COUNT);
     
     console.log(" [*] Waiting for messages in %s. To exit press CTRL+C", q);
     ch.consume(q, async function(obj) {
