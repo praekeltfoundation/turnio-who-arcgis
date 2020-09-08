@@ -1,17 +1,18 @@
 const amqp = require('amqplib/callback_api');
 const axios = require("axios");
 
-const { sendMessage } = require("./send-message");
+const { sendWithDelay } = require("./send-message");
 
 const TOKENS = JSON.parse(process.env.TOKENS);
 const TURN_URL = process.env.TURN_URL;
 const AMQP_URL = process.env.AMQP_URL;
 
-function sendBackgroundedMsg(data) {
+function sendBackgroundedMsgsWithDelay(data) {
   msgId = data.messageId
-  msg = data.msg
+  msgs = data.msgs
   user = data.user
   number = data.number
+  delay = data.delay
 
   if (number === undefined) {
     number = "41798931892";
@@ -22,7 +23,7 @@ function sendBackgroundedMsg(data) {
     timeout: 300,
     headers: { Authorization: `Bearer ${token}` }
   });
-  return sendMessage(client, messageId, msg, user);
+  return sendWithDelay(client, msgId, msgs, user, delay);
 }
 
 amqp.connect(AMQP_URL, function(err, conn) {
@@ -36,7 +37,7 @@ amqp.connect(AMQP_URL, function(err, conn) {
       
       let data = JSON.parse(obj.content.toString());
 
-      await sendBackgroundedMsg(data);
+      await sendBackgroundedMsgsWithDelay(data);
       ch.ack(obj);
       
     }, { noAck: false });

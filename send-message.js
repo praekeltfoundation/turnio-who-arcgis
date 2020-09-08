@@ -104,6 +104,27 @@ async function sendLatestNews(req, res) {
     });
 }
 
+function sendWithDelay(client, messageId, msgs, user, delay) {
+  msg = msgs.shift();
+
+  return sendMessage(client, messageId, msg, user)
+    .then(
+      setTimeout(function() {
+        if (msgs.length > 0) {
+          return sendWithDelay(client, messageId, msgs, user, delay);
+        }
+      }, delay))
+    .then(inspect("message response:"))
+    .catch(err => {
+      if (err.response) {
+        console.log("we've got a problem");
+        inspect("error data")(err.response.data);
+        inspect("error status")(err.response.status);
+        inspect("error headers")(err.response.headers);
+      }
+    });
+}
+
 function sendToQueue(content) {
   amqp.connect(AMQP_URL, function(err, conn) {
     conn.createChannel(function(err, ch) {
@@ -139,20 +160,17 @@ async function sendHomepage(req, res) {
 
   return sendToQueue({
     "messageId":messageId,
-    "msgs":msg[0],
+    "msgs":msgs,
     "user":user,
-    "number":who_number
-  }).then(sendToQueue({
-    "messageId":messageId,
-    "msgs":msg[1],
-    "user":user,
-    "number":who_number
-  }));
+    "number":who_number,
+    "delay": 5000
+  })
 }
 
 module.exports = {
   sendCountryDataBasedOnPhoneNumber,
   sendMessage,
   sendLatestNews,
-  sendHomepage
+  sendHomepage,
+  sendWithDelay
 };
