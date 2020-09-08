@@ -117,7 +117,6 @@ function sendWithDelay(client, messageId, msgs, user, delay) {
     .then(inspect("message response:"))
     .catch(err => {
       if (err.response) {
-        console.log("we've got a problem");
         inspect("error data")(err.response.data);
         inspect("error status")(err.response.status);
         inspect("error headers")(err.response.headers);
