@@ -2,12 +2,14 @@ const axios = require("axios");
 const debug = require("debug")("turn");
 const inspect = require("./inspect");
 const phone = require("phone");
-
-const TOKENS = JSON.parse(process.env.TOKENS);
-const TURN_URL = process.env.TURN_URL;
+const amqp = require('amqplib/callback_api');
 
 const { retrieveCountryData, retrieveGlobalData, retrieveContactLanguage, retrieveLatestNews } = require("./retrieve-data");
 const { formatMessage, formatNewsMessage, formatHomepageMessages } = require("./format-message");
+
+const TOKENS = JSON.parse(process.env.TOKENS);
+const TURN_URL = process.env.TURN_URL;
+const AMQP_URL = process.env.AMQP_URL;
 
 function sendMessage(client, messageId, body, to) {
   debug(`sending message to ${to} in reply to ${messageId}`);
@@ -102,17 +104,22 @@ async function sendLatestNews(req, res) {
     });
 }
 
+function sendToQueue(content) {
+  amqp.connect(AMQP_URL, function(err, conn) {
+    conn.createChannel(function(err, ch) {
+      const q = 'background';
+      ch.assertQueue(q, { durable: true });
+      ch.sendToQueue(q, Buffer.from(JSON.stringify(content)), { persistent: true });
+      console.log("Message sent to queue : ", content);
+    });
+  });
+}
+
 async function sendHomepage(req, res) {
   var who_number = req.query.number;
   if (who_number === undefined) {
     who_number = "41798931892";
   }
-  const token = TOKENS[who_number];
-  const client = axios.create({
-    baseURL: TURN_URL,
-    timeout: 300,
-    headers: { Authorization: `Bearer ${token}` }
-  });
 
   const user = req.body.contacts[0].wa_id;
   const messageId = req.body.messages[0].id;
@@ -126,29 +133,21 @@ async function sendHomepage(req, res) {
   const countryData = await retrieveCountryData(countryCode);
   const newsList = await retrieveLatestNews();
 
-  const [msg1, msg2] = formatHomepageMessages(countryData, newsList);
-  inspect("homepage stats message:")(msg1);
-  inspect("homepage news message:")(msg2);
+  const msgs = formatHomepageMessages(countryData, newsList);
+  inspect("homepage stats message:")(msgs[0]);
+  inspect("homepage news message:")(msgs[1]);
 
-  return sendMessage(client, messageId, msg1, user)
-    .then(
-      sendMessage(client, messageId, msg2, user)
-        .then(inspect("message response:"))
-        .catch(err => {
-          if (err.response) {
-            inspect("error data")(err.response.data);
-            inspect("error status")(err.response.status);
-            inspect("error headers")(err.response.headers);
-          }
-        })
-    )
-    .catch(err => {
-      if (err.response) {
-        inspect("error data")(err.response.data);
-        inspect("error status")(err.response.status);
-        inspect("error headers")(err.response.headers);
-      }
-    });
+  return sendToQueue({
+    "messageId":messageId,
+    "msgs":msg[0],
+    "user":user,
+    "number":who_number
+  }).then(sendToQueue({
+    "messageId":messageId,
+    "msgs":msg[1],
+    "user":user,
+    "number":who_number
+  }));
 }
 
 module.exports = {
