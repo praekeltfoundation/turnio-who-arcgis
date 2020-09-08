@@ -11,7 +11,8 @@
     "pretest": "NODE_ENV=test yarn sync",
     "test": "jest --watchAll",
     "start": "node index",
-    "postversion": "git push && git push --tags"
+    "postversion": "git push && git push --tags",
+    "background": "node background.js"
   },
   "keywords": [],
   "author": "fritzvd",
