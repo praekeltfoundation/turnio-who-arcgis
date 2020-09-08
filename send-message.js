@@ -2,7 +2,7 @@ const axios = require("axios");
 const debug = require("debug")("turn");
 const inspect = require("./inspect");
 const phone = require("phone");
-const amqp = require('amqplib/callback_api');
+const amqp = require('amqplib');
 
 const { retrieveCountryData, retrieveGlobalData, retrieveContactLanguage, retrieveLatestNews } = require("./retrieve-data");
 const { formatMessage, formatNewsMessage, formatHomepageMessages } = require("./format-message");
@@ -10,6 +10,10 @@ const { formatMessage, formatNewsMessage, formatHomepageMessages } = require("./
 const TOKENS = JSON.parse(process.env.TOKENS);
 const TURN_URL = process.env.TURN_URL;
 const AMQP_URL = process.env.AMQP_URL;
+
+var amqp_ch = amqp.connect(AMQP_URL).then(function(conn) {
+  return conn.createChannel();
+});
 
 function sendMessage(client, messageId, body, to) {
   debug(`sending message to ${to} in reply to ${messageId}`);
@@ -125,13 +129,13 @@ function sendWithDelay(client, messageId, msgs, user, delay) {
 }
 
 function sendToQueue(content) {
-  amqp.connect(AMQP_URL, function(err, conn) {
-    conn.createChannel(function(err, ch) {
-      const q = 'background';
-      ch.assertQueue(q, { durable: true });
-      ch.sendToQueue(q, Buffer.from(JSON.stringify(content)), { persistent: true });
-      console.log("Message sent to queue : ", content);
-    });
+  amqp_ch.then(async function(ch) {
+    const q = 'background';
+    return ch.assertQueue(q, { durable: true })
+      .then(function(ok) {
+        ch.sendToQueue(q, Buffer.from(JSON.stringify(content)), { persistent: true });
+        console.log("Message sent to queue : ", content);
+      });
   });
 }
 
