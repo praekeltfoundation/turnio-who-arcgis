@@ -12,7 +12,7 @@ if (AMQP_PREFETCH_COUNT === undefined) {
     AMQP_PREFETCH_COUNT = 10
   }
 
-function sendBackgroundedMsgsWithDelay(data) {
+function sendBackgroundedMsgsWithDelay(data){
   msgId = data.messageId
   msgs = data.msgs
   user = data.user
@@ -31,21 +31,30 @@ function sendBackgroundedMsgsWithDelay(data) {
   return sendWithDelay(client, msgId, msgs, user, delay);
 }
 
-amqp.connect(AMQP_URL, function(err, conn) {
-  conn.createChannel(function(err, ch) {
-    const q = 'background';
-    ch.assertQueue(q, { durable: true });
-    ch.prefetch(AMQP_PREFETCH_COUNT);
-    
-    console.log(" [*] Waiting for messages in %s. To exit press CTRL+C", q);
-    ch.consume(q, async function(obj) {
-      console.log(" [x] Received %s", obj.content.toString());
-      
-      let data = JSON.parse(obj.content.toString());
+function channel(err, ch){
+  const q = 'background';
+  ch.assertQueue(q, { durable: true });
+  ch.prefetch(AMQP_PREFETCH_COUNT);
 
-      await sendBackgroundedMsgsWithDelay(data);
-      ch.ack(obj);
-      
-    }, { noAck: false });
+  console.log(" [*] Waiting for messages in %s. To exit press CTRL+C", q);
+  ch.consume(q, async function(obj){
+    console.log(" [x] Received %s", obj.content.toString());
+
+    let data = JSON.parse(obj.content.toString());
+    await sendBackgroundedMsgsWithDelay(data);
+
+    ch.ack(obj);
+  }, { noAck: false });
+}
+
+// Only start consumer if it was run from the command line (allows cleaner tests)
+if (require.main === module) {
+  amqp.connect(AMQP_URL, function(err, conn) {
+    conn.createChannel(channel);
   });
-});
+}
+
+module.exports = {
+  sendBackgroundedMsgsWithDelay,
+  channel
+};
