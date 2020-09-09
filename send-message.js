@@ -128,7 +128,7 @@ function sendWithDelay(client, messageId, msgs, user, delay) {
     });
 }
 
-function sendToQueue(content) {
+function sendToBackground(content) {
   amqp_ch.then(async function(ch) {
     const q = 'background';
     return ch.assertQueue(q, { durable: true })
@@ -165,7 +165,7 @@ async function sendHomepage(req, res) {
   inspect("homepage stats message:")(msgs[0]);
   inspect("homepage news message:")(msgs[1]);
 
-  return sendToQueue({
+  return sendToBackground({
     "messageId":messageId,
     "msgs":msgs,
     "user":user,
