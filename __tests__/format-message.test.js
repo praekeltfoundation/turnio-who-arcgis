@@ -355,9 +355,11 @@ https://www.who.int/emergencies/diseases/novel-coronavirus-2019/situation-report
       }]
     };
     const formattedExample = `[🇿🇦] *South Africa Cases*
+
 _Wednesday, 20 May 2020 10:20:18 UTC_
 1845 confirmed cases (96▲)
 18 deaths (5▲)
+
 💡 _Reply *CASES* for detailed case report_`;
         expect(formatHomepageMessages(mockStatistic, news_data)[0]).toEqual(formattedExample);
   });
