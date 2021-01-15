@@ -46,16 +46,6 @@ const mockResponse = () => {
 
 // Create a stats object that will be pulled from the db
 const date = new Date();
-const stats = Statistics.create({
-  country_code: "ZAF",
-  updated: date,
-  new_cases: 96,
-  cum_cases: 1845,
-  new_deaths: 5,
-  cum_deaths: 18,
-  createdAt: date,
-  updatedAt: date
-});
 
 describe("send homepage messages", () => {
   it("should fail for an unknown country", async () => {
@@ -69,6 +59,17 @@ describe("send homepage messages", () => {
   });
 
   it("should send data to queue for known countries", async () => {
+    const stats = Statistics.create({
+      country_code: "ZAF",
+      updated: date,
+      new_cases: 96,
+      cum_cases: 1845,
+      new_deaths: 5,
+      cum_deaths: 18,
+      createdAt: date,
+      updatedAt: date
+    });
+
     let req = mockRequest();
     req.body.contacts[0].wa_id="27615551234";
     const res = mockResponse();

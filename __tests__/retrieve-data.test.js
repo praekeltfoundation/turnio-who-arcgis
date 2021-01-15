@@ -15,6 +15,10 @@ const mockAxios = jest.genMockFromModule('axios')
 mockAxios.create = jest.fn(() => mockAxios)
 
 describe("fetch data from arcGIS APIs", () => {
+  beforeEach(async () => {
+    await Statistics.destroy({truncate: true});
+  });
+
   it("should add the country to the country query", async () => {
     axios.get.mockImplementation((url) => {
       if (url.indexOf("NLD") >= 0 ) {
@@ -84,7 +88,7 @@ describe("fetch data from arcGIS APIs", () => {
     expect(lessThanADayOld(oldMock)).toBe(false);
   });
 
-  it("should get cached data from the database", async () => {
+  it("should get cached data from the database if less than an hour old", async () => {
     const date = new Date();
     const stats = await Statistics.create({
       country_code: "ZAF",
@@ -107,27 +111,27 @@ describe("fetch data from arcGIS APIs", () => {
           "ISO_2_CODE": "ZA",
           "date_epicrv": 1596326400000,
           "NewCase": 96,
-          "CumCase": 1845,
+          "CumCase": 1111,
           "NewDeath": 5,
           "CumDeath": 18
         }}]}});
       });
     data = await retrieveCountryData("ZAF");
-    expect(data.cum_cases).toBe(1845)
+    expect(data.cum_cases).toBe(1111)
   });
 
   it("should use yesterdays cached stats if new case numbers is empty", async () => {
-    const date = new Date(new Date() - (90000000));
+    const date = new Date(new Date() - (70000000));
     const stats = await Statistics.create({
       country_code: "ZAF",
       updated: date,
       new_cases: 96,
-      cum_cases: 1845,
+      cum_cases: 2222,
       new_deaths: 5,
       cum_deaths: 18,
       createdAt: date,
       updatedAt: date
-    });
+    }, {silent:true});
     axios.get.mockImplementation((url) => {
         return Promise.resolve({"data": {"features": [{"attributes": {
           "ISO_2_CODE": "ZA",
@@ -139,7 +143,7 @@ describe("fetch data from arcGIS APIs", () => {
         }}]}});
       });
     data = await retrieveCountryData("ZAF");
-    expect(data.cum_cases).toBe(1845)
+    expect(data.cum_cases).toBe(2222)
   });
 
   it("should use yesterdays stats from arcGIS if cache and new case numbers empty", async () => {
@@ -155,13 +159,13 @@ describe("fetch data from arcGIS APIs", () => {
           "ISO_2_CODE": "ZA",
           "date_epicrv": 1596240000000,
           "NewCase": 96,
-          "CumCase": 1845,
+          "CumCase": 5555,
           "NewDeath": 5,
           "CumDeath": 4444
         }}]}});
       });
     data = await retrieveCountryData("ZAF");
-    expect(data.cum_cases).toBe(1845)
+    expect(data.cum_cases).toBe(5555)
   });
 });
 
