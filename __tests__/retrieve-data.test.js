@@ -146,6 +146,39 @@ describe("fetch data from arcGIS APIs", () => {
     expect(data.cum_cases).toBe(2222)
   });
 
+  it("should use yesterdays stats from arcGIS if cache is old and new case numbers empty", async () => {
+    const date = new Date(new Date() - (90000000));
+    const stats = await Statistics.create({
+      country_code: "ZAF",
+      updated: date,
+      new_cases: 96,
+      cum_cases: 3333,
+      new_deaths: 5,
+      cum_deaths: 18,
+      createdAt: date,
+      updatedAt: date
+    }, {silent:true});
+    axios.get.mockImplementation((url) => {
+        return Promise.resolve({"data": {"features": [{"attributes": {
+          "ISO_2_CODE": "ZA",
+          "date_epicrv": 1596326400000,
+          "NewCase": 0,
+          "CumCase": 8888,
+          "NewDeath": 0,
+          "CumDeath": 23
+        }}, {"attributes": {
+          "ISO_2_CODE": "ZA",
+          "date_epicrv": 1596240000000,
+          "NewCase": 96,
+          "CumCase": 4444,
+          "NewDeath": 5,
+          "CumDeath": 23
+        }}]}});
+      });
+    data = await retrieveCountryData("ZAF");
+    expect(data.cum_cases).toBe(4444)
+  });
+
   it("should use yesterdays stats from arcGIS if cache and new case numbers empty", async () => {
     axios.get.mockImplementation((url) => {
         return Promise.resolve({"data": {"features": [{"attributes": {
