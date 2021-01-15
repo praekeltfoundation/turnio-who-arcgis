@@ -97,7 +97,9 @@ function retrieveGlobalData() {
           (a, b) => a.attributes.date_epicrv - b.attributes.date_epicrv
         );
         const latest = features.pop().attributes;
-        if (latest.CumCase === null && obj){
+        // Sometimes the endpoint gives us some strange data so if the cumulative cases
+        // is empty or has gone down then use the cached value
+        if (obj && (latest.CumCase === null || latest.CumCase < obj.cum_cases)){
           return obj;
         }
         return Statistics.create({

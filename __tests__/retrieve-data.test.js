@@ -1,6 +1,7 @@
 const axios = require("axios");
 const {
   retrieveCountryData,
+  retrieveGlobalData,
   retrieveCountryStatsFromArcGis,
   retrieveGlobalStatsFromArcGis,
   shouldNotHaveToUpdate,
@@ -199,6 +200,30 @@ describe("fetch data from arcGIS APIs", () => {
       });
     data = await retrieveCountryData("ZAF");
     expect(data.cum_cases).toBe(5555)
+  });
+
+  it("should use data from the database if global cum_cases has gone down", async () => {
+    const date = new Date(new Date() - (90000000));
+    const stats = await Statistics.create({
+      country_code: "Global",
+      updated: date,
+      new_cases: 96,
+      cum_cases: 7777,
+      new_deaths: 5,
+      cum_deaths: 18,
+      createdAt: date,
+      updatedAt: date
+    }, {silent:true});
+    axios.get.mockImplementation((url) => {
+        return Promise.resolve({"data": {"features": [{"attributes": {
+          "NewCase": 96,
+          "CumCase": 2222,
+          "NewDeath": 5,
+          "CumDeath": 4444
+        }}]}});
+      });
+    data = await retrieveGlobalData();
+    expect(data.cum_cases).toBe(7777)
   });
 });
 
