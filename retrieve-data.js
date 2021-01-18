@@ -44,19 +44,21 @@ function retrieveCountryData(countryCode) {
         }
         // If WHO probably hasn't updated their numbers for the day return 
         // our cached value or yesterday's value
-        if (latest.NewCase==0 && latest.NewDeath==0 && yesterday && yesterday.NewCase!=0) {
-          if (obj && lessThanADayOld(obj.updated)) {
+        if (latest.NewCase==0 && latest.NewDeath==0)  {
+          if (obj && lessThanADayOld(obj)) {
             return obj;
           }
-          return Statistics.create({
-            country_code: countryCode,
-            country_code_2: yesterday.ISO_2_CODE,
-            updated: yesterday.date_epicrv,
-            new_cases: yesterday.NewCase,
-            cum_cases: yesterday.CumCase,
-            new_deaths: yesterday.NewDeath,
-            cum_deaths: yesterday.CumDeath
-          });
+          if (yesterday && yesterday.NewCase!=0) {
+            return Statistics.create({
+              country_code: countryCode,
+              country_code_2: yesterday.ISO_2_CODE,
+              updated: yesterday.date_epicrv,
+              new_cases: yesterday.NewCase,
+              cum_cases: yesterday.CumCase,
+              new_deaths: yesterday.NewDeath,
+              cum_deaths: yesterday.CumDeath
+            });
+          }
         }
         return Statistics.create({
           country_code: countryCode,
@@ -95,7 +97,9 @@ function retrieveGlobalData() {
           (a, b) => a.attributes.date_epicrv - b.attributes.date_epicrv
         );
         const latest = features.pop().attributes;
-        if (latest.CumCase === null && obj){
+        // Sometimes the endpoint gives us some strange data so if the cumulative cases
+        // is empty or has gone down then use the cached value
+        if (obj && (latest.CumCase === null || latest.CumCase < obj.cum_cases)){
           return obj;
         }
         return Statistics.create({
