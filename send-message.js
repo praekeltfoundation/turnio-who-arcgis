@@ -49,7 +49,7 @@ async function sendCountryDataBasedOnPhoneNumber(req, res) {
   const token = TOKENS[who_number];
   const client = axios.create({
     baseURL: TURN_URL,
-    timeout: 300,
+    timeout: 1000,
     headers: { Authorization: `Bearer ${token}` }
   });
 
@@ -86,7 +86,7 @@ async function sendLatestNews(req, res) {
   const token = TOKENS[who_number];
   const client = axios.create({
     baseURL: TURN_URL,
-    timeout: 300,
+    timeout: 1000,
     headers: { Authorization: `Bearer ${token}` }
   });
 
