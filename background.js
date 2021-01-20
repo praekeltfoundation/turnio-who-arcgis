@@ -25,7 +25,7 @@ function sendBackgroundedMsgsWithDelay(data){
   const token = TOKENS[number];
   const client = axios.create({
     baseURL: TURN_URL,
-    timeout: 300,
+    timeout: 1000,
     headers: { Authorization: `Bearer ${token}` }
   });
   return sendWithDelay(client, msgId, msgs, user, delay);

@@ -160,7 +160,10 @@ function retrieveContactLanguage(client, msisdn) {
         headers: {
           "Accept": "application/vnd.v1+json"
         },
-      }).then(res => res.data.fields.language);
+      }).then(res => res.data.fields.language)
+      .catch(err => {
+        console.error(err.message);
+      });
 }
 
 const rssFeedUrl = "https://www.who.int/rss-feeds/news-english.xml";
