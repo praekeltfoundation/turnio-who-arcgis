@@ -94,7 +94,6 @@ async function sendLatestNews(req, res) {
   const messageId = req.body.messages[0].id;
   debug(`/news called for ${user} with message id ${messageId}`);
 
-  console.log(newsList); // Temp debug statement. this should raise a reference error
   const newsList = await retrieveLatestNews();
   console.log(newsList); // Temp debug statement!!
   const msg = formatNewsMessage(newsList, who_number);

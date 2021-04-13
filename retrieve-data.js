@@ -170,6 +170,7 @@ const rssFeedUrl = "https://www.who.int/rss-feeds/news-english.xml";
 
 async function retrieveLatestNews() {
   debug("retrieving from RSS");
+  axios.get(rssFeedUrl).then(res => console.log(res.data));
   return feed = await parser.parseURL(rssFeedUrl)
 }
 
