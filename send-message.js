@@ -95,6 +95,7 @@ async function sendLatestNews(req, res) {
   debug(`/news called for ${user} with message id ${messageId}`);
 
   const newsList = await retrieveLatestNews();
+  console.log(newsList); // Temp debug statement
   const msg = formatNewsMessage(newsList, who_number);
   inspect("news message:")(msg);
   return sendMessage(client, messageId, msg, user)
