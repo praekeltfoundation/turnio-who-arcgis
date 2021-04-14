@@ -1,4 +1,5 @@
 const axios = require("axios");
+const https = require("https");
 const {
   retrieveCountryData,
   retrieveGlobalData,
@@ -6,7 +7,8 @@ const {
   retrieveGlobalStatsFromArcGis,
   shouldNotHaveToUpdate,
   lessThanADayOld,
-  retrieveContactLanguage
+  retrieveContactLanguage,
+  retrieveLatestNews
 } = require("../retrieve-data");
 const { Statistics } = require("../models");
 
@@ -49,6 +51,23 @@ describe("fetch data from arcGIS APIs", () => {
 
     expect(data.message).toBe("Date present in url");
     spy.mockRestore()
+  });
+
+  it("should add the date to the news query", async () => {
+    // Mocks
+    const mock_date = new Date('May 20, 2020 11:20:18');
+    const spy = jest
+      .spyOn(global, 'Date')
+      .mockImplementationOnce(() => mock_date);
+
+    const spy2 = jest
+      .spyOn(https, 'get');
+
+    await retrieveLatestNews();
+
+    expect(spy2.mock.calls[0][0].href).toBe('https://www.who.int/rss-feeds/news-english.xml?req_time=5/20/2020');
+    spy.mockRestore();
+    spy2.mockRestore();
   });
 
   it("should not have to update if less than 1 hour old", () => {
