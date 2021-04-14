@@ -166,12 +166,14 @@ function retrieveContactLanguage(client, msisdn) {
       });
 }
 
-const rssFeedUrl = "https://www.who.int/rss-feeds/news-english.xml";
+// Add the date to the rss url so that it isn't cached
+const rssFeedUrl = date =>
+  `https://www.who.int/rss-feeds/news-english.xml?req_time=${date}`;
 
 async function retrieveLatestNews() {
+  const usFormatDate = new Intl.DateTimeFormat("en-US").format(new Date());
   debug("retrieving from RSS");
-  axios.get(rssFeedUrl).then(res => console.log(res.data));
-  return feed = await parser.parseURL(rssFeedUrl)
+  return feed = await parser.parseURL(rssFeedUrl(usFormatDate))
 }
 
 module.exports = {
