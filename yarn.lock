@@ -3663,10 +3663,10 @@ pgpass@1.x:
   dependencies:
     split "^1.0.0"
 
-phone@^2.4.8:
-  version "2.4.9"
-  resolved "https://registry.yarnpkg.com/phone/-/phone-2.4.9.tgz#9b308e0931ad10776024ddb2d3e914217a7767c8"
-  integrity sha512-mOSuE4WIZjEfQUPC/MH7dLZwaWTFjHRy92sfNm7vBB9yGXC29tv/2bhjwKnr1mvjIdO2ndH6VrV+TnjCB6XdpA==
+phone@^2.4.22:
+  version "2.4.22"
+  resolved "https://registry.yarnpkg.com/phone/-/phone-2.4.22.tgz#cdcd10cafa71fb3694ed81a25d4fe29c081ccc75"
+  integrity sha512-k2f9qkIgcgbbeyFFMHDcCaYdPxq7u71EjmMvD998PEquwDvIT7zmUFe00S4hH9WPjk+IQlw9W/FlHOu1O17Tbw==
 
 picomatch@^2.0.4, picomatch@^2.0.5:
   version "2.2.2"
