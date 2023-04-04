@@ -18,7 +18,7 @@ if (process.env.SENTRY_DSN) {
 
 app.post("/stats", async (req, res) => {
   if (req.body.statuses) {
-    const { recipient_id, status } = req.body.statuses[0];
+    const { message:{ recipient_id }, status } = req.body.statuses[0];
     inspect("status message: ")(
       `recipient_id: ${recipient_id}, status: ${status}`
     );
@@ -34,7 +34,7 @@ app.post("/stats", async (req, res) => {
 
 app.post("/news", async (req, res) => {
   if (req.body.statuses) {
-    const { recipient_id, status } = req.body.statuses[0];
+    const { message:{ recipient_id }, status } = req.body.statuses[0];
     inspect("status message: ")(
       `recipient_id: ${recipient_id}, status: ${status}`
     );
@@ -50,7 +50,7 @@ app.post("/news", async (req, res) => {
 
 app.post("/homepage", async (req, res) => {
   if (req.body.statuses) {
-    const { recipient_id, status } = req.body.statuses[0];
+    const { message:{ recipient_id }, status } = req.body.statuses[0];
     inspect("status message: ")(
       `recipient_id: ${recipient_id}, status: ${status}`
     );
