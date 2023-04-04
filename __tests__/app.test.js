@@ -90,3 +90,25 @@ describe("/stats endpoint", () => {
       .expect(200, done);
   });
 });
+
+describe("/news endpoint", () => {
+  it("should successfully receive read status", (done) => {
+    const testMsg = {
+      "statuses": [
+        {
+          "id": "ABGGFlA5FpafAgo6tHcNmNjXmuSf",
+          "status": "read",
+          "timestamp": "1518694700",
+          "message": {
+            "recipient_id":"16315555555"
+          }
+        }
+      ]
+    };
+    request(app)
+      .post("/news")
+      .send(testMsg)
+      .set("Accept", "application/json")
+      .expect(200, done);
+  });
+});
